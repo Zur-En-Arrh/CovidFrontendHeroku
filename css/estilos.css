@@ -1,0 +1,20 @@
+h1 {
+    font-size: 16pt;
+}
+#map{
+    display: block;
+    height: 400px;
+    width: 100%;
+}
+div#side-bar {
+    height: 400px;
+}
+
+input[type=number]{
+    width: 100px;
+}
+
+div.container button {
+    float: right;
+    margin-right: 10px;
+}
