@@ -8,7 +8,7 @@ let filtro = null
 let busca = []
 function initMap() {
 
-    const center = {lat: -22.9035 , lng: -43.2096}
+    const center = {lat: -23.3256 , lng: -46.3820}
     const div = document.querySelector('div#map')
     map = new google.maps.Map(div, {
         zoom: 10,
@@ -42,19 +42,23 @@ function initMap() {
             types: [filtro]
         }
 
-        service.nearbySearch(request, callback)
+        service.nearbySearch(request, putMarkers)
 
     })
 }
 
-async function callback(results, status) {
+async function putMarkers(results, status) {
     if(status == google.maps.places.PlacesServiceStatus.OK) {
         
         //console.log(results)
         results.forEach(place => {
             //console.log(place)
             markers.push(createMarker(place))
-            let existe = busca.find(element => element.id === place.id)
+            let existe = busca.find(element => { 
+                if(element) 
+                    return element.id === place.id
+                return false
+            })
             console.log(existe)
             if(!existe) {
                 busca.push(place)
@@ -165,7 +169,11 @@ function remover(id) {
 
 async function ajax() {
 
-    const resposta = await axios.post('https://covidcoleta.herokuapp.com/construirJson', {lugares: busca})
+
+    busca.forEach(elemento => console.log(elemento.state))
+    const url = 'https://covidcoleta.herokuapp.com/construirJson'
+    const teste = 'http://localhost:3000/construirJson'
+    const resposta = await axios.post(teste, {lugares: busca})
     console.log(resposta)
     alert(resposta.data)
 
