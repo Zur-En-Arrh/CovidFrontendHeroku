@@ -189,6 +189,6 @@ async function ajax() {
     inputJson.city = resposta.data.city
     console.log(inputJson)
     var URL = "https://sad-covid-19.herokuapp.com/brkga";
-    const segundaResposta = await axios.post(URL, JSON.stringify(inputJson), {header: {'Content-Type': 'application/json'}}) 
+    const segundaResposta = await axios.post(URL, JSON.stringify(inputJson), {headers: {'Content-Type': 'application/json'}}) 
     console.log(segundaResposta)
 }
