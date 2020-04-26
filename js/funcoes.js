@@ -168,9 +168,7 @@ function remover(id) {
 }
 
 async function ajax() {
-
-
-    busca.forEach(elemento => console.log(elemento.state))
+    //busca.forEach(elemento => console.log(elemento.state))
     const urlheroku = 'https://covidcoleta.herokuapp.com/construirJson'
     const teste = 'http://localhost:3000/construirJson'
     const resposta = await axios.post(urlheroku, {lugares: busca})
