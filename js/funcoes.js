@@ -187,7 +187,7 @@ async function ajax() {
     inputJson.cover = resposta.data.cover
     inputJson.cost = resposta.data.cost
     inputJson.city = resposta.data.city
-    console.log(inputJson)
+    console.log(JSON.stringify(inputJson))
     var URL = "https://sad-covid-19.herokuapp.com/brkga";
     const segundaResposta = await axios.post(URL, JSON.stringify(inputJson), {headers: {'Content-Type': 'application/json'}}) 
     console.log(segundaResposta)
