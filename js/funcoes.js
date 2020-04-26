@@ -55,7 +55,7 @@ async function putMarkers(results, status) {
             //console.log(place)
             markers.push(createMarker(place))
             let existe = busca.find(element => { 
-                if(element) 
+                if(element != undefined) 
                     return element.id === place.id
                 return false
             })
@@ -171,13 +171,11 @@ async function ajax() {
 
 
     busca.forEach(elemento => console.log(elemento.state))
-    const url = 'https://covidcoleta.herokuapp.com/construirJson'
+    const urlheroku = 'https://covidcoleta.herokuapp.com/construirJson'
     const teste = 'http://localhost:3000/construirJson'
-    const resposta = await axios.post(teste, {lugares: busca})
+    const resposta = await axios.post(urlheroku, {lugares: busca})
     console.log(resposta)
-    alert(resposta.data)
-
-    var inputJson = {};
+    var inputJson = {}
     inputJson.n = {Value: document.getElementById("txtN").value}
     inputJson.m = {Value: document.getElementById("txtM").value}
     inputJson.p = {Value: document.getElementById("txtP").value}
