@@ -212,14 +212,14 @@ async function ajax() {
 function montarJSON(obj) {
     let str = `
     {
-        "Elite":{"Value":${obj.Elite}},
-        "K":{"Value":${obj.K}},
-        "M":{"Value":${obj.M}},
-        "Mutant":{"Value":${obj.Mutant}},
-        "N":{"Value":${obj.N}},
-        "P":{"Value":${obj.P}},
-        "S":{"Value":"${obj.S}"},
-        "Type":{"Value":${obj.Type}},
+        "Elite":{"Value":${obj.Elite.Value}},
+        "K":{"Value":${obj.K.Value}},
+        "M":{"Value":${obj.M.Value}},
+        "Mutant":{"Value":${obj.Mutant.Value}},
+        "N":{"Value":${obj.N.Value}},
+        "P":{"Value":${obj.P.Value}},
+        "S":{"Value":"${obj.S.Value}"},
+        "Type":{"Value":${obj.Type.Value}},
     `
 
     str += `City: {Value: [`
