@@ -7,19 +7,16 @@ let markers = []
 let filtro = null
 let busca = []
 
-const JASON = `{
-    "Elite":{"Value":4},
-    "K":{"Value":10},
-    "M":{"Value":8},
-    "Mutant":{"Value":2},
-    "N":{"Value":20},
-    "P":{"Value":20},
-    "S":{"Value":"1"},
-    "Type":{"Value":true},
-    "City":{"Value":["RS-4","MG-2","RN-3","RS-4","RJ-2","MG-0","RJ-0","SC-0","AC-1","RJ-3","RJ-2","RS-2","SC-2","RJ-6","RN-3","RN-6","SC-4","SC-2","AM-2","AM-3","AP-4","AP-3","RJ-1","RO-4","MT-2","MT-4","RS-4","GO-4","RS-0"]},
-    "Cover":{"Value":[5400,3580,2351,3223,4123,3212,2512,5132,8078,3124,4151,5131,5643,5131,5132,9787,5779,5808,507,7507,3122,3125,6432,1245,6421,1425,1315,6432,5122]},
-    "Cost":{"Value":[321321,753654,523334,321412,321517,635523,516821,215168,512356,132186,972198,351285,865565,841798,135652,571971,312979,312756,319267,946732,321512,521321,211514,312312,315164,875435,735223,642189,879768]}
-}`
+const JASON = ` {
+        "Elite":{"Value":4},
+        "K":{"Value":10},
+        "M":{"Value":8},
+        "Mutant":{"Value":2},
+        "N":{"Value":20},
+        "P":{"Value":20},
+        "S":{"Value":"1"},
+        "Type":{"Value":true},
+    "City": {"Value": ["SP-1","SP-1","SP-0","SP-0","SP-0","SP-0","SP-0","SP-0","SP-0","SP-0","SP-50","SP-50","SP-50","RJ-9","RJ-9","RJ-2","RJ-2","RJ-2","RJ-0","RJ-2"]},"Cost": {"Value": [4564,1356,4642,4623,1235,4562,5648,2135,4545,4465,8799,5456,4546,4566,4565,4879,1321,5462,4897,2315]},"Cover": {"Value": [3315,3000,1354,2135,6548,8792,4889,4564,9845,5646,5546,5464,8646,5466,2313,4648,5468,3158,4687,1235]}}`
 
 
 
@@ -205,8 +202,9 @@ async function ajax() {
     inputJson.City = {Value: resposta.data.city.value}
     const JSON = montarJSON(inputJson)
     console.log(JSON)
+    console.log(JASON)
     var URL = "https://covid-19-flask-api.herokuapp.com/brkga";
-    const segundaResposta = await axios.post(URL, JSON, {headers: {'Content-Type': 'application/json'}}) 
+    const segundaResposta = await axios.post(URL, JASON, {headers: {'Content-Type': 'application/json'}}) 
     console.log(segundaResposta)
 }
 
