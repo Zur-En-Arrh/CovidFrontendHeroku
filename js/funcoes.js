@@ -174,17 +174,17 @@ async function ajax() {
     const resposta = await axios.post(urlheroku, {lugares: busca})
     console.log(resposta)
     var inputJson = {}
-    inputJson.n = {Value: document.getElementById("txtN").value}
-    inputJson.m = {Value: document.getElementById("txtM").value}
-    inputJson.p = {Value: document.getElementById("txtP").value}
-    inputJson.elite = {Value: document.getElementById("txtElite").value}
-    inputJson.mutant = {Value: document.getElementById("txtMutant").value}
-    inputJson.k = {Value: document.getElementById("txtK").value}
+    inputJson.N = {Value: document.getElementById("txtN").value}
+    inputJson.M = {Value: document.getElementById("txtM").value}
+    inputJson.P = {Value: document.getElementById("txtP").value}
+    inputJson.Elite = {Value: document.getElementById("txtElite").value}
+    inputJson.Mutant = {Value: document.getElementById("txtMutant").value}
+    inputJson.K = {Value: document.getElementById("txtK").value}
     inputJson.S = {Value: document.getElementById("txtS").value}
-    inputJson.type = {Value: document.getElementById("txtType").checked}
-    inputJson.cover = resposta.data.cover
-    inputJson.cost = resposta.data.cost
-    inputJson.city = resposta.data.city
+    inputJson.Type = {Value: document.getElementById("txtType").checked}
+    inputJson.Cover = resposta.data.cover
+    inputJson.Cost = resposta.data.cost
+    inputJson.City = resposta.data.city
     console.log(JSON.stringify(inputJson))
     var URL = "https://covid-19-flask-api.herokuapp.com/brkga";
     const segundaResposta = await axios.post(URL, JSON.stringify(inputJson), {headers: {'Content-Type': 'application/json'}}) 
