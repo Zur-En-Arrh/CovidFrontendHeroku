@@ -223,20 +223,20 @@ function montarJSON(obj) {
     `
 
     str += `City: {Value: [`
-    let reduce = obj.City.value.reduce((acumulador, atual) => `${acumulador}"${atual}",`,``)
+    let reduce = obj.City.Value.reduce((acumulador, atual) => `${acumulador}"${atual}",`,``)
     let stringFinal = reduce.substring(0,(reduce.length - 1));
     str += stringFinal
     str += `]},`
 
 
     str += `Cost: {Value: [`
-    reduce = obj.Cost.value.reduce((acumulador, atual) => `${acumulador}${atual},`,``)
+    reduce = obj.Cost.Value.reduce((acumulador, atual) => `${acumulador}${atual},`,``)
     stringFinal = reduce.substring(0,(reduce.length - 1));
     str += stringFinal
     str += `]},`
 
     str += `Cover: {Value: [`
-    reduce = obj.Cover.value.reduce((acumulador, atual) => `${acumulador}${atual},`,``)
+    reduce = obj.Cover.Value.reduce((acumulador, atual) => `${acumulador}${atual},`,``)
     stringFinal = reduce.substring(0,(reduce.length - 1));
     str += stringFinal
     str += `]}`
