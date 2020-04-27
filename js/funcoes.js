@@ -202,9 +202,8 @@ async function ajax() {
     inputJson.City = {Value: resposta.data.city.value}
     const JSON = montarJSON(inputJson)
     console.log(JSON)
-    console.log(JASON)
     var URL = "https://covid-19-flask-api.herokuapp.com/brkga";
-    const segundaResposta = await axios.post(URL, JASON, {headers: {'Content-Type': 'application/json'}}) 
+    const segundaResposta = await axios.post(URL, JSON, {headers: {'Content-Type': 'application/json'}}) 
     console.log(segundaResposta)
 }
 
