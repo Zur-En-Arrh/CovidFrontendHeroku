@@ -7,20 +7,6 @@ let markers = []
 let filtro = null
 let busca = []
 
-const JASON = ` {
-        "Elite":{"Value":4},
-        "K":{"Value":10},
-        "M":{"Value":8},
-        "Mutant":{"Value":2},
-        "N":{"Value":20},
-        "P":{"Value":20},
-        "S":{"Value":"1"},
-        "Type":{"Value":true},
-    "City": {"Value": ["SP-1","SP-1","SP-0","SP-0","SP-0","SP-0","SP-0","SP-0","SP-0","SP-0","SP-50","SP-50","SP-50","RJ-9","RJ-9","RJ-2","RJ-2","RJ-2","RJ-0","RJ-2"]},"Cost": {"Value": [4564,1356,4642,4623,1235,4562,5648,2135,4545,4465,8799,5456,4546,4566,4565,4879,1321,5462,4897,2315]},"Cover": {"Value": [3315,3000,1354,2135,6548,8792,4889,4564,9845,5646,5546,5464,8646,5466,2313,4648,5468,3158,4687,1235]}}`
-
-
-
-
 function initMap() {
 
     const center = {lat: -23.3256 , lng: -46.3820}
@@ -185,7 +171,6 @@ function remover(id) {
 async function ajax() {
     //busca.forEach(elemento => console.log(elemento.state))
     const urlheroku = 'https://covidcoleta.herokuapp.com/construirJson'
-    const teste = 'http://localhost:3000/construirJson'
     const resposta = await axios.post(urlheroku, {lugares: busca})
     console.log(resposta)
     var inputJson = {}

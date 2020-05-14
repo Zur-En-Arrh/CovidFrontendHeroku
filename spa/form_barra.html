@@ -1,0 +1,15 @@
+Taxa <select name="ratio" id="sltRatio">
+    <option value="">Nenhuma</option>
+    <option value="População">População</option>
+    <option value="Área">Área</option>
+    </select> <br> <br>
+Mortes <input type="checkbox" name="deaths" id="chkMortes"> <br> <br>
+
+Parâmetro <select onchange="fillComboBox()" name="param" id="csv">
+    <option value="">Escolha um Parâmetro</option>
+    <option value="Cities">Por Cidades</option>
+    <option value="States">Por Estados</option>
+    </select>
+    <select id="dados"></select>
+
+    <button type="button" onclick="construirGrafico()">Salvar</button>

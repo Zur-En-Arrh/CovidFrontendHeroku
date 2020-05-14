@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Mapas</title>
+</head>
+<body>
+    <nav>
+        <a href link='form_barra.html' destino='.formdiv'>Gráficos em Barra</a>
+        <a href link='form_pizza.html' destino='.formdiv'>Gráficos em Pizza</a>
+        <a href link='form_compara_barra.html' destino='.formdiv'>Comparações</a>
+        <a href>Gráfico por Região</a>
+    </nav>
+    <div class="formdiv"></div>
+    <script src="../js/axios.js"></script>
+    <script src="../js/funcoes-graficos.js"></script>
+    <script src="../js/funcoes.js"></script>  
+    <script>
+        document.querySelectorAll('[link]').forEach(link => {
+            const url = link.attributes['link'].value
+            const destino = link.attributes['destino'].value
+
+            link.onclick = e => {
+                e.preventDefault()
+                console.log(url,  destino)
+                navegarAjax(url, destino)
+            }
+        })
+
+        window.onpopstate = e => {
+            if(e.state) {
+                navegarAjax(window.location.href, '.formdiv', false)
+            }
+        }
+    </script>
+</body>
+</html>
