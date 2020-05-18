@@ -1,8 +1,18 @@
-Mortes <input type="checkbox" name="deaths" id="chkMortes"> <br> <br>
-Parâmetro <select onchange="comboBox()" name="param" id="csv">
-    <option value="">Escolha um Parâmetro</option>
-    <option value="Cities">Por Cidades</option>
-    <option value="States"> Por Estados</option>
-</select> <br> <br>
-<select id="dados"></select> <br> <br>
-<button type="button" onclick="construirGrafico()">Salvar</button>
+<div class="form-check mb-3 mt-3">
+    <input type="checkbox" class="form-check-input" name="deaths" id="chkMortes"> 
+    <label class="form-check-label" for="chkMortes">Mortes</label>
+</div>
+
+<div id="select-group">
+    <div class="form-group">
+        <label for="csv">Parâmetro</label>
+        <select class="form-control" onchange="fillComboBox()" name="param" id="csv">
+            <option value="">Escolha um Parâmetro</option>
+            <option value="States">Por Cidades</option>
+            <option value="state">Por Estados</option>
+            <option value="region">Por Regiões</option>
+        </select>
+    </div>
+</div>
+
+    <button type="button" class="btn btn-primary" onclick="createPie()">Salvar</button>

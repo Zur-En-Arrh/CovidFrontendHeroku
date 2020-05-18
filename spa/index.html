@@ -4,33 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Mapas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/nprogress.css" />
+    <link rel="stylesheet" type="text/css" href="../css/estilos.css"/>
 </head>
 <body>
-    <nav>
-        <a href link='form_barra.html' destino='.formdiv'>Gráficos em Barra</a>
-        <a href link='form_pizza.html' destino='.formdiv'>Gráficos em Pizza</a>
-        <a href link='form_compara_barra.html' destino='.formdiv'>Comparações</a>
-        <a href>Gráfico por Região</a>
-    </nav>
-    <div class="formdiv"></div>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg bg-dark sticky-top">
+            <a class="nav-link text-light" href link='form_barra.html' destino='.form'>Gráficos em Barra</a>
+            <a class="nav-link text-light" href link='form_pizza.html' destino='.form'>Gráficos em Pizza</a>
+            <a class="nav-link text-light" href link='form_dinamico.html' destino='.form'>Gráficos Dinâmicos</a>
+        </nav>
+        <div class="form"></div>
+
+        <table id="graficos" class="table mt-3">
+            <thead>
+                <td>Tipo</td>
+                <td>Visualizar</td>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
     <script src="../js/axios.js"></script>
+    <script src="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/index.js"></script>
     <script src="../js/funcoes-graficos.js"></script>
     <script src="../js/funcoes.js"></script>  
     <script>
+        loadProgressBar()
         document.querySelectorAll('[link]').forEach(link => {
             const url = link.attributes['link'].value
             const destino = link.attributes['destino'].value
 
             link.onclick = e => {
                 e.preventDefault()
-                console.log(url,  destino)
-                navegarAjax(url, destino)
+                ajaxNavigation(url, destino)
             }
         })
 
         window.onpopstate = e => {
             if(e.state) {
-                navegarAjax(window.location.href, '.formdiv', false)
+                ajaxNavigation(window.location.href, '.form', false)
             }
         }
     </script>

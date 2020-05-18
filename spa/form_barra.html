@@ -1,15 +1,27 @@
-Taxa <select name="ratio" id="sltRatio">
-    <option value="">Nenhuma</option>
-    <option value="População">População</option>
-    <option value="Área">Área</option>
-    </select> <br> <br>
-Mortes <input type="checkbox" name="deaths" id="chkMortes"> <br> <br>
+<div class="form-group mb-3 mt-3">
+    <label for="sltRatio">Taxa</label>
+    <select class="form-control" name="ratio" id="sltRatio">
+        <option value="">Nenhuma</option>
+        <option value="Population">População</option>
+        <option value="Area">Área</option>
+    </select> 
+</div>
 
-Parâmetro <select onchange="fillComboBox()" name="param" id="csv">
-    <option value="">Escolha um Parâmetro</option>
-    <option value="Cities">Por Cidades</option>
-    <option value="States">Por Estados</option>
-    </select>
-    <select id="dados"></select>
+<div class="form-check mb-3">
+    <input type="checkbox" class="form-check-input" name="deaths" id="chkMortes"> 
+    <label class="form-check-label" for="chkMortes">Mortes</label>
+</div>
 
-    <button type="button" onclick="construirGrafico()">Salvar</button>
+<div id="select-group">
+    <div class="form-group">
+        <label for="csv">Parâmetro</label>
+        <select class="form-control" onchange="fillComboBox()" name="param" id="csv">
+        <option value="">Escolha um Parâmetro</option>
+        <option value="States">Por Cidades</option>
+        <option value="region">Por Estados</option>
+        </select>
+    </div>
+</div>
+    <!-- <select id="dados"></select> -->
+
+<button type="button" class="btn btn-primary" onclick="createTotalBar()">Salvar</button>
