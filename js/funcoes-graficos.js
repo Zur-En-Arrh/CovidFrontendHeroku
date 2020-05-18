@@ -1,6 +1,6 @@
 const FLASK_API_BASE_URL = 'https://covid-19-flask-api.herokuapp.com/'
-const JS_API_BASE_URL = 'http://localhost:3000/'
-
+//const JS_API_BASE_URL = 'http://localhost:3000/'
+const JS_API_BASE_URL = 'https://covidcoleta.herokuapp.com/'
 function fillComboBox() {
     const formGroup = document.createElement('div')
     formGroup.setAttribute('class', 'form-group')
