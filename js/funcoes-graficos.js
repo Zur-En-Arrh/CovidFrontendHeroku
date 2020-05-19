@@ -1,40 +1,124 @@
 const FLASK_API_BASE_URL = 'https://covid-19-flask-api.herokuapp.com/'
-const JS_API_BASE_URL = 'http://localhost:3000/'
-//const JS_API_BASE_URL = 'https://covidcoleta.herokuapp.com/'
+//const JS_API_BASE_URL = 'http://localhost:3000/'
+const JS_API_BASE_URL = 'https://covidcoleta.herokuapp.com/'
 
 let elementos = []
+let selecionado = null
 
-function choosePath()
+function choosePath(temporal = false)
 {
-    const combo = document.querySelector('select#csv')
-    const item = combo.options[combo.selectedIndex].value
-    if(item == 'estados')
-    {
-        elementos = []
-        if(document.querySelector('select#dados')){
+    if(temporal) {
+        const combo = document.querySelector('select#csv')
+        const item = combo.options[combo.selectedIndex].value
+        if(item == 'estados') {
+            //
+            if(document.querySelector('div#radioDados').innerHTML !== ''){
+                document.querySelector('div#radioDados').innerHTML = ''
+                /*const label = document.querySelector('label[for=dados]')
+                estadoComboBox.parentNode.removeChild(estadoComboBox)
+                label.parentNode.removeChild(label)*/
+            }
+            fillComboBox('radio')
+        }else {
             const estadoComboBox = document.querySelector('select#dados')
-            const label = document.querySelector('label[for=dados]')
-            estadoComboBox.parentNode.removeChild(estadoComboBox)
-            label.parentNode.removeChild(label)
+            if(estadoComboBox){
+                document.querySelector('div#radioDados').innerHTML = ''
+                const label = document.querySelector('label[for=dados]')
+                estadoComboBox.parentNode.removeChild(estadoComboBox)
+                label.parentNode.removeChild(label)
+            }
+            createRadioButton('estado')
         }
-        document.querySelector('ul#lista').innerHTML = ''
-        document.querySelector('div#chkDados').innerHTML = ''
-        fillComboBox()
-        
-    }else{
-        elementos = []
-        document.querySelector('ul#lista').innerHTML = ''
-        if(document.querySelector('div#chkDados').innerHTML !== ''){
-            const estadoComboBox = document.querySelector('select#dados')
-            const label = document.querySelector('label[for=dados]')
-            estadoComboBox.parentNode.removeChild(estadoComboBox)
-            label.parentNode.removeChild(label)
+    }else {
+        const combo = document.querySelector('select#csv')
+        const item = combo.options[combo.selectedIndex].value
+        if(item == 'estados')
+        {
+            elementos = []
+            if(document.querySelector('select#dados')){
+                const estadoComboBox = document.querySelector('select#dados')
+                const label = document.querySelector('label[for=dados]')
+                estadoComboBox.parentNode.removeChild(estadoComboBox)
+                label.parentNode.removeChild(label)
+            }
+            document.querySelector('ul#lista').innerHTML = ''
+            document.querySelector('div#chkDados').innerHTML = ''
+            fillComboBox()
+            
+        }else{
+            elementos = []
+            document.querySelector('ul#lista').innerHTML = ''
+            if(document.querySelector('div#chkDados').innerHTML !== ''){
+                const estadoComboBox = document.querySelector('select#dados')
+                const label = document.querySelector('label[for=dados]')
+                estadoComboBox.parentNode.removeChild(estadoComboBox)
+                label.parentNode.removeChild(label)
+            }
+            createCheckBoxes('cidade')
         }
-        createCheckBoxes('cidade')
     }
 }
 
-function fillComboBox() {
+function createRadioButton(type) {
+    url = JS_API_BASE_URL
+    if(type == 'estado') {
+        url += `data/estados`
+    }else {
+        const combo = document.querySelector('select#dados')
+        const item = combo.options[combo.selectedIndex].value
+        url += `data/cidades/${item}`
+        console.log(url)
+    }
+
+    //console.log(url)
+
+    const elemento = document.querySelector('div#radioDados')
+    axios(url)
+        .then(resposta => {
+            elemento.innerHTML = ''
+            resposta.data.forEach(jsonItem => {
+                const child = `<div class="form-check"> 
+                <input type="radio" onclick="selecionarItem('${jsonItem}')" class="form-check-input" id="id${jsonItem}" value="${jsonItem}" name="gvalue" ${selecionado === jsonItem?'checked':''}/> 
+                <label class="form-check-label" for="id${jsonItem}">${jsonItem}</label>
+                </div>`
+                elemento.innerHTML += child
+            })
+        })
+        .catch(err => console.log(err))
+}
+
+function selecionarItem(valor) {
+    selecionado = valor
+}
+
+function createTemporalSeries() {
+
+    const radios = Array.from(document.querySelectorAll('input[name=gvalue]'))
+    const checkedRadio = radios.find(radio => radio.checked)
+
+    const obj = {
+        valor: {Value: checkedRadio.value}, 
+        taxa: {Value: 'Population'}
+    }
+
+    
+
+    const comboEstados = document.querySelector('select#csv')
+    const item = comboEstados.options[comboEstados.selectedIndex].innerText
+    if(item == 'Por Cidades') {
+        obj.tipo = {Value: 'city'}
+        /**/
+    }else if (item == 'Por Estados') {
+        obj.tipo = {Value: 'state'}
+    }
+
+    const url = FLASK_API_BASE_URL+`temporalseries`
+    console.log(obj)
+    plotsAjax(url, obj, 'temporal')
+    
+}
+
+function fillComboBox(input = 'checkbox') {
     const formGroup = document.createElement('div')
     formGroup.setAttribute('class', 'form-group')
 
@@ -55,14 +139,18 @@ function fillComboBox() {
     if(item === 'Cities' || item === 'estados') {
         axios(JS_API_BASE_URL+`data/${item}`)
             .then(resposta => {
+                //console.log(resposta.data)
                 elemento.innerHTML = ''
                 resposta.data.forEach(obj => {
                     const child = document.createElement('option')
                     child.innerHTML = obj
                     elemento.appendChild(child)
                 })
-                if(document.querySelector('input[type=radio]#radioHeatmap'))
+                if(document.querySelector('input[type=radio]#radioHeatmap')) {
                     elemento.setAttribute('onchange', "createCheckBoxes('estado')")
+                }else if(document.querySelector('div#radioDados')) {
+                    elemento.setAttribute('onchange', "createRadioButton('cidade')")
+                }
                 formGroup.appendChild(elemento)
                 document.querySelector('div#select-group').appendChild(formGroup)
             })

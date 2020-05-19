@@ -1,0 +1,25 @@
+<!--<div class="form-group mb-3 mt-3">
+    <label for="sltRatio">Taxa</label>
+    <select class="form-control" name="ratio" id="sltRatio">
+        <option value="">Nenhuma</option>
+        <option value="Population">População</option>
+        <option value="Area">Área</option>
+    </select> 
+</div> -->
+
+<div id="select-group" class="form-group mb-3 mt-3">
+    <div class="form-group">
+        <label for="csv">Parâmetro</label>
+        <select class="form-control" onchange="choosePath(true)" name="param" id="csv">
+        <option value="">Escolha um Parâmetro</option>
+        <option value="estados">Por Cidades</option>
+        <option value="states">Por Estados</option>
+        </select>
+    </div>
+</div>
+
+<div id="radioDados"></div>
+
+    <!-- <select id="dados"></select> -->
+
+<button type="button" class="btn btn-primary" onclick="createTemporalSeries()">Salvar</button>
