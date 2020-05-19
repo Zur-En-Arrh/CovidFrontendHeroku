@@ -157,9 +157,9 @@ function createPie() {
     const csv = sltCSV.options[sltCSV.selectedIndex].value
     let cobertura = ''
     if(csv == 'states') {
-        cobertura = 'city'
-    }else if(csv == 'estados') {
         cobertura = 'state'
+    }else if(csv == 'estados') {
+        cobertura = 'city'
     }else {
         cobertura = csv
     }
