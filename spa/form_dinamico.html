@@ -6,7 +6,7 @@
         </label>
     </div>
     <div class="form-check">
-        <input class="form-check-input" type="radio" id="radioComparison" name="grafico" value="comparison">
+        <input class="form-check-input" type="radio" id="radioComparison" name="grafico" value="comparison" selected>
         <label class="form-check-label" for="radioComparison">
             Comparativo
         </label>
@@ -21,14 +21,21 @@
 <div id="select-group">
     <div class="form-group">
         <label for="csv">Parâmetro</label>
-        <select class="form-control" onchange="createCheckBoxes()" name="param" id="csv">
+        <select class="form-control" onchange="choosePath()" name="param" id="csv">
         <option value="">Escolha um Parâmetro</option>
-        <option value="Cities">Por Cidades</option>
-        <option value="States">Por Estados</option>
+        <option value="estados">Por Cidades</option>
+        <option value="states">Por Estados</option>
         </select>
     </div>
 </div>
 
-<div id="chkDados" class="mb-3"></div>
+<div class="row">
+    <div id="chkDados" class="col"></div>
+
+    <div class="col">
+        <ul id="lista"></ul>
+    </div>
+</div>
+
 
 <button type="button" class="btn btn-primary" onclick="createDinamicPlots()">Salvar</button>
