@@ -127,23 +127,27 @@ async function plotsAjax(url,body, tipo) {
     //console.log(JSON.stringify(body))
     try {
         const resposta = await axios.post(url, body, {headers: {'Content-Type': 'application/json'}})
-        const graficoURL = resposta.data
-        const linha = document.createElement('tr')
-        const colunaView = document.createElement('td')
-        const colunaNome = document.createElement('td')
-        
-        const linkView = document.createElement('a')
-        linkView.setAttribute('href', graficoURL)
-        linkView.setAttribute('target', '_blank')
-        linkView.innerText = 'Ver'
+        if(resposta.data == 'ERRO') {
+            alert('Gráfico já existente!')
+        }else {
+            const graficoURL = resposta.data
+            const linha = document.createElement('tr')
+            const colunaView = document.createElement('td')
+            const colunaNome = document.createElement('td')
+            
+            const linkView = document.createElement('a')
+            linkView.setAttribute('href', graficoURL)
+            linkView.setAttribute('target', '_blank')
+            linkView.innerText = 'Ver'
 
-        colunaNome.innerText = tipo
-        colunaView.appendChild(linkView)
+            colunaNome.innerText = tipo
+            colunaView.appendChild(linkView)
 
-        linha.appendChild(colunaNome)
-        linha.appendChild(colunaView)
-        
-        document.querySelector('table#graficos tbody').appendChild(linha)
+            linha.appendChild(colunaNome)
+            linha.appendChild(colunaView)
+            
+            document.querySelector('table#graficos tbody').appendChild(linha)
+        }
     }catch(e)
     {
         console.log(e)
