@@ -137,7 +137,6 @@ function fillComboBox(input = 'checkbox') {
         label.innerText = 'Estados'
     formGroup.appendChild(label)
     if(item === 'Cities' || item === 'estados') {
-        if(item == 'estados') item = 'States'
         axios(JS_API_BASE_URL+`data/${item}`)
             .then(resposta => {
                 //console.log(resposta.data)
