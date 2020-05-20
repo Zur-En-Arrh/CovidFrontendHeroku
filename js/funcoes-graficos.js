@@ -130,13 +130,14 @@ function fillComboBox(input = 'checkbox') {
     elemento.setAttribute('class', 'form-control')
     
     const combo = document.querySelector('select#csv')
-    const item = combo.options[combo.selectedIndex].value
+    let item = combo.options[combo.selectedIndex].value
     if(item == 'Cities')
         label.innerText = 'Cidades'
     else
         label.innerText = 'Estados'
     formGroup.appendChild(label)
     if(item === 'Cities' || item === 'estados') {
+        if(item == 'estados') item = 'States'
         axios(JS_API_BASE_URL+`data/${item}`)
             .then(resposta => {
                 //console.log(resposta.data)
