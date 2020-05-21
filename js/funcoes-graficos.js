@@ -22,6 +22,7 @@ function choosePath(temporal = false)
         }else {
             const estadoComboBox = document.querySelector('select#dados')
             if(estadoComboBox){
+                console.log('entrei aqui')
                 document.querySelector('div#radioDados').innerHTML = ''
                 const label = document.querySelector('label[for=dados]')
                 estadoComboBox.parentNode.removeChild(estadoComboBox)
@@ -35,12 +36,6 @@ function choosePath(temporal = false)
         if(item == 'estados')
         {
             elementos = []
-            if(document.querySelector('select#dados')){
-                const estadoComboBox = document.querySelector('select#dados')
-                const label = document.querySelector('label[for=dados]')
-                estadoComboBox.parentNode.removeChild(estadoComboBox)
-                label.parentNode.removeChild(label)
-            }
             document.querySelector('ul#lista').innerHTML = ''
             document.querySelector('div#chkDados').innerHTML = ''
             fillComboBox()
@@ -48,8 +43,8 @@ function choosePath(temporal = false)
         }else{
             elementos = []
             document.querySelector('ul#lista').innerHTML = ''
-            if(document.querySelector('div#chkDados').innerHTML !== ''){
-                const estadoComboBox = document.querySelector('select#dados')
+            const estadoComboBox = document.querySelector('select#dados')
+            if(estadoComboBox){
                 const label = document.querySelector('label[for=dados]')
                 estadoComboBox.parentNode.removeChild(estadoComboBox)
                 label.parentNode.removeChild(label)
@@ -146,7 +141,7 @@ function fillComboBox(input = 'checkbox') {
                     child.innerHTML = obj
                     elemento.appendChild(child)
                 })
-                if(document.querySelector('input[type=radio]#radioHeatmap')) {
+                if(document.querySelector('input[type=hidden]')) {
                     elemento.setAttribute('onchange', "createCheckBoxes('estado')")
                 }else if(document.querySelector('div#radioDados')) {
                     elemento.setAttribute('onchange', "createRadioButton('cidade')")
@@ -192,6 +187,18 @@ function createCheckBoxes(type) {
         .catch(err => console.log(err))
 }
 
+function clearList() {
+    elementos.forEach(elemento => {
+        Array.from(document.querySelectorAll('div#chkDados input[type=checkbox]')).forEach(check => {
+            if(check.checked)
+                check.click()
+        })
+        document.querySelector('ul').innerHTML = ''
+    })
+
+    elementos = []
+}
+
 
 function updateList(cidade) {
     const findCity = obj => obj === cidade
@@ -215,32 +222,52 @@ async function plotsAjax(url,body, tipo) {
     //console.log(JSON.stringify(body))
     try {
         const resposta = await axios.post(url, body, {headers: {'Content-Type': 'application/json'}})
-        if(resposta.data == 'ERRO') {
-            alert('Gráfico já existente!')
-        }else {
-            const graficoURL = resposta.data
-            const linha = document.createElement('tr')
-            const colunaView = document.createElement('td')
-            const colunaNome = document.createElement('td')
-            
-            const linkView = document.createElement('a')
-            linkView.setAttribute('href', graficoURL)
-            linkView.setAttribute('target', '_blank')
-            linkView.innerText = 'Ver'
-
-            colunaNome.innerText = tipo
-            colunaView.appendChild(linkView)
-
-            linha.appendChild(colunaNome)
-            linha.appendChild(colunaView)
-            
-            document.querySelector('table#graficos tbody').appendChild(linha)
-        }
+        console.log(resposta)
+        addToTable([resposta.data], tipo)
     }catch(e)
     {
+        alert('Gráfico já criado')
         console.log(e)
     }
     
+}
+
+function addToTable(files, type) {
+    const lines = files.map(file => {
+        const line = document.createElement('tr')
+        const columnView = document.createElement('td')
+        const columnDemographic = document.createElement('td')
+        const columnReach = document.createElement('td')
+        const columnFileName = document.createElement('td')
+
+
+        if(file.Tipo == 'temporal') {
+            columnDemographic.innerText = 'infectados e mortos'
+        }else {
+            columnDemographic.innerText = file.Mortes
+        }
+
+        columnReach.innerText = file.Alcance
+
+        columnFileName.innerText = file.Nome
+        
+
+        const linkView = document.createElement('a')
+        linkView.setAttribute('href', file.caminho)
+        linkView.setAttribute('target', '_blank')
+        linkView.innerText = 'Ver'
+        columnView.appendChild(linkView)
+
+        line.appendChild(columnDemographic)
+        line.appendChild(columnReach)
+        line.appendChild(columnFileName)
+        line.appendChild(columnView)
+        return line
+    })
+    
+    lines.forEach(line => {
+        document.querySelector('table#graficos tbody').appendChild(line)
+    })
 }
 
 function createPie() {
@@ -310,9 +337,7 @@ async function ajaxGraficoEstatico() {
     console.log(resposta)
 }
 */
-function createDinamicPlots() {
-    const radios = Array.from(document.querySelectorAll('input[name=grafico]'))
-    const radioEscolhido = radios.find(radio => radio.checked)
+function createDinamicPlots(type) {
     const combo = document.querySelector('select#csv')
     const item = combo.options[combo.selectedIndex].text
     //const chkId = item == 'Por Cidades'?'City':'State'
@@ -333,7 +358,7 @@ function createDinamicPlots() {
 
     console.log(JSON.stringify(corpo))
 
-    let complemento = `${radioEscolhido.value}/`
+    let complemento = `${type}/`
 
     if(item == 'Por Cidades')
         complemento += 'cities'
@@ -341,7 +366,7 @@ function createDinamicPlots() {
         complemento += 'states'
     
     let tipo = ''
-    if(radioEscolhido.value == 'comparison') {
+    if(type == 'comparison') {
         tipo = 'Comparação'
         if(corpo.selecionado.Value.length == 2)
             complemento += `/Two`
@@ -361,7 +386,42 @@ async function ajaxNavigation(link, destino, push = true) {
         const resposta = await axios(link)
         const html = await resposta.data
         div.innerHTML = html
+        let url = FLASK_API_BASE_URL+'teste/'
+        let tipo = ''
+        switch(link) {
+            case 'form_barra.html':
+                url += '__fixed/t'
+                tipo = 'barra'
+                break
+            case 'form_pizza.html':
+                url += '__fixed/p'
+                tipo = 'pizza'
+                break
+            case 'form_mapacalor.html':
+                url += '__custom/h'
+                tipo = 'mapa de calor'
+                break
+            case 'form_comparativo.html':
+                url += '__custom/c'
+                tipo = 'comparativo'
+                break
+            default:
+                url += '__fixed/ts'
+                tipo = 'temporal'
+                break
+        }
+
+        document.querySelector('table tbody').innerHTML = ''
+
+        findFiles(url, tipo)
+
     }catch(e) {
         div.innerHTML = e
     }
+}
+
+async function findFiles(url, type){
+    const resposta = await axios(url)
+    //console.log(resposta.data)
+    addToTable(resposta.data.Filenames, type)
 }
