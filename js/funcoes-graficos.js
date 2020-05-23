@@ -4,6 +4,7 @@ const JS_API_BASE_URL = 'https://covidcoleta.herokuapp.com/'
 
 let elementos = []
 let selecionado = null
+let tabela = []
 
 function choosePath(temporal = false)
 {
@@ -223,7 +224,10 @@ async function plotsAjax(url,body, tipo) {
     try {
         const resposta = await axios.post(url, body, {headers: {'Content-Type': 'application/json'}})
         console.log(resposta)
-        addToTable([resposta.data], tipo)
+        if(resposta.data.Erro)
+            alert('Cidades sem mortes')
+        else
+            addToTable([resposta.data], tipo)
     }catch(e)
     {
         alert('Gráfico já criado')
@@ -233,40 +237,50 @@ async function plotsAjax(url,body, tipo) {
 }
 
 function addToTable(files, type) {
+    console.log(files)
     const lines = files.map(file => {
-        const line = document.createElement('tr')
-        const columnView = document.createElement('td')
-        const columnDemographic = document.createElement('td')
-        const columnReach = document.createElement('td')
-        const columnFileName = document.createElement('td')
-
-
-        if(file.Tipo == 'temporal') {
-            columnDemographic.innerText = 'infectados e mortos'
+        if(tabela.find(obj => obj.caminho == file.caminho)) {
+            return null
         }else {
-            columnDemographic.innerText = file.Mortes
+            tabela.push(file)
+            console.log(tabela)
+            const line = document.createElement('tr')
+            const columnView = document.createElement('td')
+            const columnDemographic = document.createElement('td')
+            const columnReach = document.createElement('td')
+            const columnFileName = document.createElement('td')
+
+
+            if(file.Tipo == 'temporal') {
+                columnDemographic.innerText = 'infectados e mortos'
+            }else {
+                columnDemographic.innerText = file.Mortes
+            }
+
+            columnReach.innerText = file.Alcance
+
+            columnFileName.innerText = file.Nome
+            
+
+            const linkView = document.createElement('a')
+            linkView.setAttribute('href', file.caminho)
+            linkView.setAttribute('target', '_blank')
+            linkView.innerText = 'Ver'
+            columnView.appendChild(linkView)
+
+            line.appendChild(columnDemographic)
+            line.appendChild(columnReach)
+            line.appendChild(columnFileName)
+            line.appendChild(columnView)
+            return line
         }
-
-        columnReach.innerText = file.Alcance
-
-        columnFileName.innerText = file.Nome
-        
-
-        const linkView = document.createElement('a')
-        linkView.setAttribute('href', file.caminho)
-        linkView.setAttribute('target', '_blank')
-        linkView.innerText = 'Ver'
-        columnView.appendChild(linkView)
-
-        line.appendChild(columnDemographic)
-        line.appendChild(columnReach)
-        line.appendChild(columnFileName)
-        line.appendChild(columnView)
-        return line
     })
     
     lines.forEach(line => {
-        document.querySelector('table#graficos tbody').appendChild(line)
+        if(line != null)
+            document.querySelector('table#graficos tbody').appendChild(line)
+        else
+            alert('Gráfico repetido')
     })
 }
 
@@ -386,7 +400,7 @@ async function ajaxNavigation(link, destino, push = true) {
         const resposta = await axios(link)
         const html = await resposta.data
         div.innerHTML = html
-        let url = FLASK_API_BASE_URL+'teste/'
+        /*let url = FLASK_API_BASE_URL+'teste/'
         let tipo = ''
         switch(link) {
             case 'form_barra.html':
@@ -413,7 +427,7 @@ async function ajaxNavigation(link, destino, push = true) {
 
         document.querySelector('table tbody').innerHTML = ''
 
-        findFiles(url, tipo)
+        findFiles(url, tipo)*/
 
     }catch(e) {
         div.innerHTML = e
