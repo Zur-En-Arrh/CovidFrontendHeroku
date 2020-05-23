@@ -125,11 +125,6 @@ function fillComboBox(input = 'checkbox') {
     elemento.setAttribute('id', 'dados')
     elemento.setAttribute('class', 'form-control')
     
-    const optionVazio = document.createElement('option')
-    optionVazio.innerText = 'Escolha um Estado'
-    optionVazio.setAttribute('value', ' ')
-    elemento.appendChild(optionVazio)
-    
     const combo = document.querySelector('select#csv')
     let item = combo.options[combo.selectedIndex].value
     if(item == 'Cities')
