@@ -127,7 +127,7 @@ function fillComboBox(input = 'checkbox') {
     
     const optionVazio = document.createElement('option')
     optionVazio.innerText = 'Escolha um Estado'
-    optionVazio.setAttribute('value', '')
+    optionVazio.setAttribute('value', ' ')
     elemento.appendChild(optionVazio)
     
     const combo = document.querySelector('select#csv')
