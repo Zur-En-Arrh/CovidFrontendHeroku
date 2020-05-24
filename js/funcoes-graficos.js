@@ -38,7 +38,7 @@ function choosePath(temporal = false)
         {
             elementos = []
             document.querySelector('ul#lista').innerHTML = ''
-            document.querySelector('div#chkDados').innerHTML = ''
+            document.querySelector('div.multiselect').innerHTML = ''
             fillComboBox()
             
         }else{
@@ -162,15 +162,28 @@ function fillComboBox(input = 'checkbox') {
 }
 
 function createCheckBoxes(type) {
+    const multiselect = document.querySelector('div.multiselect')
+    const createInnerHTML = option =>  `
+    <div class="selectBox" onclick="showCheckboxes()">
+        <select class='form-control'>
+        <option>Escolha um(a) ${option}</option>
+        </select>
+        <div class="overSelect"></div>
+    </div>
+    <div id="chkDados">
+    </div>
+    `
     let url = JS_API_BASE_URL
     if(type == 'cidade')
     {
         url += `data/estados`
+        multiselect.innerHTML = createInnerHTML('estado')
     }else if (type == 'estado')
     {
         const combo = document.querySelector('select#dados')
         const item = combo.options[combo.selectedIndex].value
         url += `data/cidades/${item}`
+        multiselect.innerHTML = createInnerHTML('cidade')
     }
     const elemento = document.querySelector('div#chkDados')
     axios(url)
@@ -179,8 +192,9 @@ function createCheckBoxes(type) {
             resposta.data.forEach(cidade => {
                 const findCity = obj => obj === cidade
                 const child = `<div class="form-check"> 
+                <label class="form-check-label" for="id${cidade}">
                 <input type="checkbox" onclick="updateList('${cidade}')" class="form-check-input" id="id${cidade}" value="${cidade}" name="chk${type}" ${elementos.find(findCity)?'checked':''}/> 
-                <label class="form-check-label" for="id${cidade}">${cidade}</label>
+                ${cidade}</label>
                 </div>`
                 elemento.innerHTML += child
             })
