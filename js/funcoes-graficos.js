@@ -161,10 +161,15 @@ function fillComboBox(input = 'checkbox') {
     }
 }
 
+function capitalize(s) {
+    if (typeof s !== 'string') return ''
+    return s.charAt(0).toUpperCase() + s.slice(1)
+  }
+
 function createCheckBoxes(type) {
     const multiselect = document.querySelector('div.multiselect')
     const createInnerHTML = option =>  `
-    <label>${option.toUpperCase()}s</label>
+    <label>${capitalize(option)}s</label>
     <div class="selectBox" onclick="showCheckboxes()">
         <select class='form-control'>
         <option>Escolha um(a) ${option}</option>
