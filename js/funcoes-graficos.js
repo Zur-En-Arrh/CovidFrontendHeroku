@@ -164,7 +164,7 @@ function fillComboBox(input = 'checkbox') {
 function createCheckBoxes(type) {
     const multiselect = document.querySelector('div.multiselect')
     const createInnerHTML = option =>  `
-    <label>${option}s</label>
+    <label>${option.toUpperCase()}s</label>
     <div class="selectBox" onclick="showCheckboxes()">
         <select class='form-control'>
         <option>Escolha um(a) ${option}</option>
