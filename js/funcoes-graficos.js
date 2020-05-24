@@ -38,7 +38,7 @@ function choosePath(temporal = false)
         {
             elementos = []
             document.querySelector('ul#lista').innerHTML = ''
-            document.querySelector('div.multiselect').innerHTML = ''
+            document.querySelector('div.multiselectc').innerHTML = ''
             fillComboBox()
             
         }else{
