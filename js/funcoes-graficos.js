@@ -13,23 +13,36 @@ function choosePath(temporal = false)
         const item = combo.options[combo.selectedIndex].value
         if(item == 'estados') {
             //
-            if(document.querySelector('div#radioDados').innerHTML !== ''){
-                document.querySelector('div#radioDados').innerHTML = ''
-                /*const label = document.querySelector('label[for=dados]')
-                estadoComboBox.parentNode.removeChild(estadoComboBox)
-                label.parentNode.removeChild(label)*/
-            }
-            fillComboBox('radio')
-        }else {
-            const estadoComboBox = document.querySelector('select#dados')
-            if(estadoComboBox){
-                console.log('entrei aqui')
+            /*if(document.querySelector('div#radioDados').innerHTML !== ''){
                 document.querySelector('div#radioDados').innerHTML = ''
                 const label = document.querySelector('label[for=dados]')
                 estadoComboBox.parentNode.removeChild(estadoComboBox)
                 label.parentNode.removeChild(label)
+            }*/
+            const gvalueComboBox = document.querySelector('select#gvalue')
+            if(gvalueComboBox) {
+                gvalueComboBox.parentNode.removeChild(gvalueComboBox)
+                const label = document.querySelector('label[for=gvalue]')
+                label.parentNode.removeChild(label)
             }
-            createRadioButton('estado')
+
+            fillComboBox('temporal')
+        }else {
+            const estadoComboBox = document.querySelector('select#dados')
+            if(estadoComboBox){
+                console.log('entrei aqui')
+                //document.querySelector('div#radioDados').innerHTML = ''*/
+                let label = document.querySelector('label[for=gvalue]')
+                if(label)
+                    label.parentNode.removeChild(label)
+                label = document.querySelector('label[for=dados]')
+                label.parentNode.removeChild(label)
+                const cidades = document.querySelector('select#gvalue')
+                estadoComboBox.parentNode.removeChild(estadoComboBox)
+                cidades.parentNode.removeChild(cidades)
+            }
+            createOptions('estado')
+            //createRadioButton('estado')
         }
     }else {
         const combo = document.querySelector('select#csv')
@@ -55,15 +68,51 @@ function choosePath(temporal = false)
     }
 }
 
-function createRadioButton(type) {
+function createOptions(type) {
+
+    const formGroup = document.createElement('div')
+    formGroup.setAttribute('class', 'form-group')
+
+    const label = document.createElement('label')
+    label.setAttribute('for', 'gvalue')
+
+    const elemento = document.createElement('select')
+    elemento.setAttribute('id', 'gvalue')
+    elemento.setAttribute('class', 'form-control')
+    
+    
+    let estado = null
     url = JS_API_BASE_URL
-    if(type == 'estado') {
-        url += `data/estados`
-    }else {
+    if(type == 'cidade') {
+        label.innerText = 'Cidades'
         const combo = document.querySelector('select#dados')
-        const item = combo.options[combo.selectedIndex].value
-        url += `data/cidades/${item}`
-        console.log(url)
+        estado = combo.options[combo.selectedIndex].value
+        url += `data/cidades/${estado}`
+    }else {
+        label.innerText = 'Estados'
+        url += `data/estados`
+    }
+    formGroup.appendChild(label)
+    axios(url)
+    .then(resposta => {
+        elemento.innerHTML = ''
+        resposta.data.forEach(jsonItem => {
+            const child = `<option value="${jsonItem}"> 
+            ${jsonItem}
+            </option>`
+            elemento.innerHTML += child
+        })
+        formGroup.appendChild(elemento)
+        document.querySelector('div#select-group').appendChild(formGroup)
+    })
+    .catch(err => console.log(err))
+    
+
+    /*
+    if(type == 'estado') {
+        
+    }else {
+        
     }
 
     //console.log(url)
@@ -80,7 +129,7 @@ function createRadioButton(type) {
                 elemento.innerHTML += child
             })
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err))*/
 }
 
 function selecionarItem(valor) {
@@ -89,11 +138,11 @@ function selecionarItem(valor) {
 
 function createTemporalSeries() {
 
-    const radios = Array.from(document.querySelectorAll('input[name=gvalue]'))
-    const checkedRadio = radios.find(radio => radio.checked)
+    const values = document.querySelector('select#gvalue')
+    const gvalue = values.options[values.selectedIndex].value
 
     const obj = {
-        valor: {Value: checkedRadio.value}, 
+        valor: {Value: gvalue}, 
         taxa: {Value: 'Population'}
     }
 
@@ -144,8 +193,8 @@ function fillComboBox(input = 'checkbox') {
                 })
                 if(document.querySelector('input[type=hidden]')) {
                     elemento.setAttribute('onchange', "createCheckBoxes('estado')")
-                }else if(document.querySelector('div#radioDados')) {
-                    elemento.setAttribute('onchange', "createRadioButton('cidade')")
+                }else if(input == 'temporal') {
+                    elemento.setAttribute('onchange', "createOptions('cidade')")
                 }
                 formGroup.appendChild(elemento)
                 document.querySelector('div#select-group').appendChild(formGroup)
