@@ -2,8 +2,18 @@
 
 <input type="hidden" name="tokenDinamico" value="comparativo">
 <div class="form-check mb-3">
-    <input type="checkbox" class="form-check-input" name="deaths" id="chkMortes"> 
-    <label class="form-check-label" for="chkMortes">Mortes</label>
+    <label class="form-check-label" for="radioMortes">
+    
+    <input type="radio" value="mortes" class="form-check-input" name="deaths" id="radioMortes"> 
+    Mortes
+    </label>
+</div>
+<div class="form-check mb-3">
+    <label class="form-check-label" for="radioInfec">
+    
+    <input type="radio" value="infectados" class="form-check-input" name="deaths" id="radioInfec"> 
+    Infectados
+    </label>
 </div>
 
 <div id="select-group">
@@ -29,5 +39,5 @@
 
 <div class="my-3">
 <button type="button" class="btn btn-warning" onclick="clearList()">Limpar lista</button>
-<button type="button" class="btn btn-primary" onclick="createDinamicPlots('comparison')">Salvar</button>
+<button type="button" class="btn btn-primary" onclick="createDinamicPlots('comparison')">Gerar Gráfico</button>
 </div>

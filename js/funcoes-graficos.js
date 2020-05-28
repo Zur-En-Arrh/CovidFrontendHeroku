@@ -38,8 +38,10 @@ function choosePath(temporal = false)
                 label = document.querySelector('label[for=dados]')
                 label.parentNode.removeChild(label)
                 const cidades = document.querySelector('select#gvalue')
-                estadoComboBox.parentNode.removeChild(estadoComboBox)
-                cidades.parentNode.removeChild(cidades)
+                if(cidades) {
+                    estadoComboBox.parentNode.removeChild(estadoComboBox)
+                    cidades.parentNode.removeChild(cidades)
+                }
             }
             createOptions('estado')
             //createRadioButton('estado')
@@ -69,9 +71,12 @@ function choosePath(temporal = false)
 }
 
 function createOptions(type) {
-
+    const formGValue = document.querySelector('div#formgvalue')
+    if(formGValue)
+        formGValue.parentNode.removeChild(formGValue)
     const formGroup = document.createElement('div')
     formGroup.setAttribute('class', 'form-group')
+    formGroup.setAttribute('id', 'formgvalue')
 
     const label = document.createElement('label')
     label.setAttribute('for', 'gvalue')
@@ -96,6 +101,7 @@ function createOptions(type) {
     axios(url)
     .then(resposta => {
         elemento.innerHTML = ''
+        resposta.data.sort()
         resposta.data.forEach(jsonItem => {
             const child = `<option value="${jsonItem}"> 
             ${jsonItem}
@@ -186,6 +192,7 @@ function fillComboBox(input = 'checkbox') {
             .then(resposta => {
                 //console.log(resposta.data)
                 elemento.innerHTML = ''
+                resposta.data.sort()
                 resposta.data.forEach(obj => {
                     const child = document.createElement('option')
                     child.innerHTML = obj
@@ -244,6 +251,7 @@ function createCheckBoxes(type) {
     axios(url)
         .then(resposta => {
             elemento.innerHTML = ''
+            resposta.data.sort()
             resposta.data.forEach(cidade => {
                 const findCity = obj => obj === cidade
                 const child = `<div class="form-check"> 
@@ -288,6 +296,20 @@ function updateList(cidade) {
     console.log(elementos)
 }
 
+function deleteFromTable(id) {
+    const i = tabela.indexOf(tabela.find(file => file.Nome == id))
+    delete tabela[i]
+    tabela = tabela.filter(file => file !== null || file !== undefined)
+    const linhas = document.querySelectorAll('tr')
+    let node = ''
+    linhas.forEach(linha => {
+        let linhaId = linha.getAttribute('id')
+        if(linhaId == id)
+            node = linha
+    })
+    node.parentNode.removeChild(node)
+}
+
 async function plotsAjax(url,body, tipo) {
     //console.log(JSON.stringify(body))
     try {
@@ -314,10 +336,20 @@ function addToTable(files, type) {
             tabela.push(file)
             console.log(tabela)
             const line = document.createElement('tr')
+            line.setAttribute('id', file.Nome)
             const columnView = document.createElement('td')
             const columnDemographic = document.createElement('td')
             const columnReach = document.createElement('td')
-            const columnFileName = document.createElement('td')
+            const columnDelete = document.createElement('td')
+
+            const deleteButton = document.createElement('button')
+            delete
+            deleteButton.setAttribute('type', 'button')
+            deleteButton.setAttribute('class', 'btn btn-danger float-left')
+            deleteButton.setAttribute('onclick', `deleteFromTable('${file.Nome}')`)
+            deleteButton.innerText = 'Excluir'
+
+            columnDelete.appendChild(deleteButton)
 
 
             if(file.Tipo == 'temporal') {
@@ -328,19 +360,18 @@ function addToTable(files, type) {
 
             columnReach.innerText = file.Alcance
 
-            columnFileName.innerText = file.Nome
             
 
             const linkView = document.createElement('a')
             linkView.setAttribute('href', file.caminho)
             linkView.setAttribute('target', '_blank')
-            linkView.innerText = 'Ver'
+            linkView.innerText = 'Visualizar Gráfico'
             columnView.appendChild(linkView)
 
             line.appendChild(columnDemographic)
             line.appendChild(columnReach)
-            line.appendChild(columnFileName)
             line.appendChild(columnView)
+            line.appendChild(columnDelete)
             return line
         }
     })
@@ -354,7 +385,11 @@ function addToTable(files, type) {
 }
 
 function createPie() {
-    const mortes = document.querySelector('input#chkMortes').checked
+    const input = Array.from(document.querySelectorAll('input[name=deaths]')).find(input => input.checked == true)
+    let mortes = true
+    if(input.value == 'infectados')
+        mortes = false
+    //console.log(mortes)
     const sltCSV = document.querySelector('select#csv')
     const csv = sltCSV.options[sltCSV.selectedIndex].value
     let cobertura = ''
@@ -382,7 +417,10 @@ function createPie() {
 }
 
 function createTotalBar() {
-    const mortes = document.querySelector('input#chkMortes').checked
+    const input = Array.from(document.querySelectorAll('input[name=deaths]')).find(input => input.checked == true)
+    let mortes = true
+    if(input.value == 'infectados')
+        mortes = false
     const sltCSV = document.querySelector('select#csv')
     const csv = sltCSV.options[sltCSV.selectedIndex].value
 
@@ -430,7 +468,10 @@ function createDinamicPlots(type) {
     const valor = chk => chk.value
     */
 
-    const mortes = document.querySelector('input#chkMortes').checked
+   const input = Array.from(document.querySelectorAll('input[name=deaths]')).find(input => input.checked == true)
+   let mortes = true
+   if(input.value == 'infectados')
+       mortes = false
 
     const filtro = elementos.filter(obj => obj !== undefined)
 

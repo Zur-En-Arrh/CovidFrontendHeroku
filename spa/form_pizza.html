@@ -1,8 +1,17 @@
 <h1 class="mb-3 mt-3">Gráficos em Pizza</h1>
 
 <div class="form-check mb-3">
-    <input type="checkbox" class="form-check-input" name="deaths" id="chkMortes"> 
-    <label class="form-check-label" for="chkMortes">Mortes</label>
+    <label class="form-check-label" for="radioMortes">
+    <input type="radio" value="mortes" class="form-check-input" name="deaths" id="radioMortes"> 
+    Mortes
+    </label>
+</div>
+
+<div class="form-check mb-3">
+    <label class="form-check-label" for="radioInfec">
+    <input type="radio" value="infectados" class="form-check-input" name="deaths" id="radioInfec"> 
+    Infectados
+    </label>
 </div>
 
 <div id="select-group">
@@ -17,4 +26,4 @@
     </div>
 </div>
 
-    <button type="button" class="btn btn-primary" onclick="createPie()">Salvar</button>
+    <button type="button" class="btn btn-primary" onclick="createPie()">Gerar Gráfico</button>
