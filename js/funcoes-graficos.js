@@ -103,7 +103,7 @@ function createOptions(type) {
         elemento.innerHTML = ''
         resposta.data.sort()
         resposta.data.forEach(jsonItem => {
-            const child = `<option value="${jsonItem}"> 
+            const child = `<option value="${jsonItem.replace("-", "*")}"> 
             ${jsonItem}
             </option>`
             elemento.innerHTML += child
@@ -228,7 +228,7 @@ function createCheckBoxes(type) {
     <label>${capitalize(option)}s</label>
     <div class="selectBox" onclick="showCheckboxes()">
         <select class='form-control'>
-        <option>Escolha um(a) ${option}</option>
+        <option>Escolha um(a) ou mais ${option}(s)</option>
         </select>
         <div class="overSelect"></div>
     </div>
@@ -256,7 +256,7 @@ function createCheckBoxes(type) {
                 const findCity = obj => obj === cidade
                 const child = `<div class="form-check"> 
                 <label class="form-check-label" for="id${cidade}">
-                <input type="checkbox" onclick="updateList('${cidade}')" class="form-check-input" id="id${cidade}" value="${cidade}" name="chk${type}" ${elementos.find(findCity)?'checked':''}/> 
+                <input type="checkbox" onclick="updateList('${cidade}')" class="form-check-input" id="id${cidade}" value="${cidade.replace('-', '*')}" name="chk${type}" ${elementos.find(findCity)?'checked':''}/> 
                 ${cidade}</label>
                 </div>`
                 elemento.innerHTML += child
@@ -321,7 +321,7 @@ async function plotsAjax(url,body, tipo) {
             addToTable([resposta.data], tipo)
     }catch(e)
     {
-        alert('Gráfico já criado')
+        alert('Erro desconhecido!')
         console.log(e)
     }
     
@@ -339,9 +339,38 @@ function addToTable(files, type) {
             line.setAttribute('id', file.Nome)
             const columnView = document.createElement('td')
             const columnDemographic = document.createElement('td')
+            const columnItems = document.createElement('td')
             const columnReach = document.createElement('td')
             const columnDelete = document.createElement('td')
 
+            let itens = []
+            let innerText = ''
+            if(file.Tipo == 'barra' || file.Tipo == 'pizza') {
+                if(file.Alcance == 'estado' ) {
+                    innerText = file.Alcance+'s'
+                }else if(file.Alcance == 'regiao') {
+                    innerText = 'regiões'
+                }else {
+                    innerText = file.selecionados.split('_')[0]
+                }
+            }else if(file.Tipo == 'temporal') {
+                //console.log(file.selecionados.split('-'))
+                innerText = file.selecionados.split('*')[0]
+            }else {
+                itens.push(...file.selecionados.split('X'))
+                
+                let cont = 0
+                itens.forEach(item => {
+                    if(file.Alcance == 'cidade')
+                        item = item.split('-')[0]
+                    innerText += item
+                    cont += 1
+                    if(cont < itens.length)
+                        innerText += ', '
+                })
+            }
+
+            columnItems.innerText = innerText
             const deleteButton = document.createElement('button')
             delete
             deleteButton.setAttribute('type', 'button')
@@ -370,6 +399,7 @@ function addToTable(files, type) {
 
             line.appendChild(columnDemographic)
             line.appendChild(columnReach)
+            line.appendChild(columnItems)
             line.appendChild(columnView)
             line.appendChild(columnDelete)
             return line
@@ -510,6 +540,10 @@ async function ajaxNavigation(link, destino, push = true) {
         const resposta = await axios(link)
         const html = await resposta.data
         div.innerHTML = html
+        if(link == 'sobre.html')
+            document.querySelector('div#tabela').style.visibility = 'hidden'
+        else
+            document.querySelector('div#tabela').style.visibility = 'visible'
         /*let url = FLASK_API_BASE_URL+'teste/'
         let tipo = ''
         switch(link) {
