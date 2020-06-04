@@ -71,6 +71,11 @@ function choosePath(temporal = false)
 }
 
 function createOptions(type) {
+    if(type == 'estado') {
+        const sltDados = document.querySelector('div#estadosSltDiv')
+        if(sltDados)
+            sltDados.parentNode.removeChild(sltDados)
+    }
     const formGValue = document.querySelector('div#formgvalue')
     if(formGValue)
         formGValue.parentNode.removeChild(formGValue)
@@ -197,7 +202,12 @@ function fillComboBox(input = 'checkbox') {
         axios(FLASK_API_BASE_URL+`data/${item}`)
             .then(resposta => {
                 //console.log(resposta.data)
-                elemento.innerHTML = ''
+                formGroup.setAttribute('id', 'estadosSltDiv')
+                if((input == 'temporal' && item != 'Cities') || input != 'temporal') {
+                    elemento.innerHTML = "<option value=''>Escolha um Estado</option>"
+                }else {
+                    elemento.innerHTML = ''
+                }
                 resposta.data.sort()
                 resposta.data.forEach(obj => {
                     const child = document.createElement('option')
