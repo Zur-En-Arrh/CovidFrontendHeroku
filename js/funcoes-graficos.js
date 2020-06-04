@@ -417,13 +417,6 @@ function addToTable(files, type) {
         }else {
             tabela.push(file)
             console.log(tabela)
-            const line = document.createElement('tr')
-            line.setAttribute('id', file.Nome)
-            const columnView = document.createElement('td')
-            const columnDemographic = document.createElement('td')
-            const columnItems = document.createElement('td')
-            const columnReach = document.createElement('td')
-            const columnDelete = document.createElement('td')
 
             let itens = []
             let innerText = ''
@@ -453,16 +446,6 @@ function addToTable(files, type) {
                 })
             }
 
-            columnItems.innerText = innerText
-            const deleteButton = document.createElement('button')
-            delete
-            deleteButton.setAttribute('type', 'button')
-            deleteButton.setAttribute('class', 'btn btn-danger float-left')
-            deleteButton.setAttribute('onclick', `deleteFromTable('${file.Nome}')`)
-            deleteButton.innerText = 'Excluir'
-
-            columnDelete.appendChild(deleteButton)
-
             let demographic = ''
             if(file.Tipo == 'temporal') {
                 demographic = 'infectados e mortos'
@@ -472,15 +455,6 @@ function addToTable(files, type) {
 
             if(file.Alcance == 'regiao')
                 file.Alcance = 'região'
-            columnReach.innerText = file.Alcance
-
-            
-
-            const linkView = document.createElement('a')
-            linkView.setAttribute('href', file.caminho)
-            linkView.setAttribute('target', '_blank')
-            linkView.innerText = 'Visualizar Gráfico'
-            columnView.appendChild(linkView)
 
             const linha = `
             <tr id='${file.Nome}'>
@@ -491,13 +465,6 @@ function addToTable(files, type) {
             <td><button class='btn btn-danger float-left' onclick="deleteFromTable('${file.Nome}')">Excluir</button></td>
             </tr>
             `
-
-
-            line.appendChild(columnDemographic)
-            line.appendChild(columnReach)
-            line.appendChild(columnItems)
-            line.appendChild(columnView)
-            line.appendChild(columnDelete)
             return linha
         }
     })
