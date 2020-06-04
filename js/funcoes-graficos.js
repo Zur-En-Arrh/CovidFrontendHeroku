@@ -92,17 +92,15 @@ function createOptions(type) {
     
     
     let estado = null
-    url = ''
+    url = FLASK_API_BASE_URL
     if(type == 'cidade') {
         label.innerText = 'Cidades'
         const combo = document.querySelector('select#dados')
         estado = combo.options[combo.selectedIndex].value
-        url += JS_API_BASE_URL
-        url += `data/cidades/${estado}`
+        url += `grafico/Infected/${estado}`
     }else {
         label.innerText = 'Estados'
-        url += FLASK_API_BASE_URL
-        url += `data/estados`
+        url += `dados/estados`
     }
     formGroup.appendChild(label)
     axios(url)
@@ -110,8 +108,9 @@ function createOptions(type) {
         elemento.innerHTML = ''
         resposta.data.sort()
         resposta.data.forEach(jsonItem => {
+            jsonItem = decodeURIComponent( escape(jsonItem) )
             const child = `<option value="${jsonItem.replace("-", "*")}"> 
-            ${jsonItem.split('-')[0]}
+            ${jsonItem.replace('*', '-').split('-')[0]}
             </option>`
             elemento.innerHTML += child
         })
@@ -198,8 +197,11 @@ function fillComboBox(input = 'checkbox') {
     else
         label.innerText = 'Estados'
     formGroup.appendChild(label)
+
+    //let url = FLASK_API_BASE_URL
+
     if(item === 'estados') {
-        axios(FLASK_API_BASE_URL+`data/${item}`)
+        axios(FLASK_API_BASE_URL+`dados/${item}`)
             .then(resposta => {
                 //console.log(resposta.data)
                 formGroup.setAttribute('id', 'estadosSltDiv')
@@ -254,7 +256,7 @@ function createCheckBoxes(type) {
     let url = FLASK_API_BASE_URL
     if(type == 'cidade')
     {
-        url += `data/estados`
+        url += `dados/estados`
         multiselect.innerHTML = createInnerHTML('estado')
     }else if (type == 'estado')
     {
@@ -268,7 +270,7 @@ function createCheckBoxes(type) {
         if(mortes == 'mortes') mortes = 'Deaths'
         else mortes = 'Infected'
 
-        url += `dados/${mortes}/${item}`
+        url += `grafico/${mortes}/${item}`
         multiselect.innerHTML = createInnerHTML('cidade')
     }
     const elemento = document.querySelector('div#chkDados')
@@ -278,7 +280,7 @@ function createCheckBoxes(type) {
             elemento.innerHTML = ''
             resposta.data.sort()
             resposta.data.forEach(cidade => {
-                cidade = decodeURIComponent( escape(cidade) );
+                cidade = decodeURIComponent( escape(cidade) )
                 const findCity = obj => obj === cidade
                 const child = `<div class="form-check"> 
                 <label class="form-check-label" for="id${cidade}">
@@ -366,7 +368,7 @@ async function plotsAjax(url,body, tipo) {
     console.log(chaves)
     const itensNulos = chaves.map(chave => {
         console.log(body[chave])
-        if(chave == 'mortes')
+        if(chave == 'mortes' || chave == 'taxa')
             return false
         else 
             return body[chave].Value == null || body[chave].Value == ''
@@ -461,11 +463,11 @@ function addToTable(files, type) {
 
             columnDelete.appendChild(deleteButton)
 
-
+            let demographic = ''
             if(file.Tipo == 'temporal') {
-                columnDemographic.innerText = 'infectados e mortos'
+                demographic = 'infectados e mortos'
             }else {
-                columnDemographic.innerText = file.Mortes
+                demographic = file.Mortes
             }
 
             if(file.Alcance == 'regiao')
@@ -480,19 +482,31 @@ function addToTable(files, type) {
             linkView.innerText = 'Visualizar Gráfico'
             columnView.appendChild(linkView)
 
+            const linha = `
+            <tr id='${file.Nome}'>
+            <td>${demographic}</td>
+            <td>${file.Alcance}</td>
+            <td>${innerText}</td>
+            <td><a href='${file.caminho}' target='_blank'>Visualizar Gráfico</a></td>
+            <td><button class='btn btn-danger float-left' onclick="deleteFromTable('${file.Nome}')">Excluir</button></td>
+            </tr>
+            `
+
+
             line.appendChild(columnDemographic)
             line.appendChild(columnReach)
             line.appendChild(columnItems)
             line.appendChild(columnView)
             line.appendChild(columnDelete)
-            return line
+            return linha
         }
     })
     
     lines.forEach(line => {
-        if(line != null)
-            document.querySelector('table#graficos tbody').appendChild(line)
-        else
+        if(line != null){
+            innerHTML = line + document.querySelector('table#graficos tbody').innerHTML
+            document.querySelector('table#graficos tbody').innerHTML = innerHTML
+        }else
             alert('Gráfico repetido')
     })
 }
