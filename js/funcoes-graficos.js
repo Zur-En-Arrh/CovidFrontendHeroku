@@ -362,6 +362,8 @@ function deleteFromTable(id) {
 }
 
 async function plotsAjax(url,body, tipo) {
+    const button = document.querySelector('button#btnGrafico')
+    button.setAttribute('disabled', 'true')
     let incompleto = false
     let campo = ''
     const chaves = Object.keys(body)
@@ -399,8 +401,10 @@ async function plotsAjax(url,body, tipo) {
             console.log(resposta)
             if(resposta.data.Erro)
                 alert('Cidades sem mortes')
-            else
+            else {
                 addToTable([resposta.data], tipo)
+                button.removeAttribute('disabled')
+            }
         }catch(e)
         {
             alert('Erro desconhecido!')
