@@ -147,27 +147,31 @@ function selecionarItem(valor) {
 function createTemporalSeries() {
 
     const values = document.querySelector('select#gvalue')
-    const gvalue = values.options[values.selectedIndex].value
+    if(values) {
+        const gvalue = values.options[values.selectedIndex].value
 
-    const obj = {
-        valor: {Value: gvalue}, 
-        taxa: {Value: 'Population'}
+        const obj = {
+            valor: {Value: gvalue}, 
+            taxa: {Value: 'Population'}
+        }
+
+        
+
+        const comboEstados = document.querySelector('select#csv')
+        const item = comboEstados.options[comboEstados.selectedIndex].innerText
+        if(item == 'Por Cidades') {
+            obj.tipo = {Value: 'city'}
+            /**/
+        }else if (item == 'Por Estados') {
+            obj.tipo = {Value: 'state'}
+        }
+
+        const url = FLASK_API_BASE_URL+`temporalseries`
+        console.log(obj)
+        plotsAjax(url, obj, 'temporal')
+    }else {
+        alert('Selecione um município ou estado para gerar o gráfico')
     }
-
-    
-
-    const comboEstados = document.querySelector('select#csv')
-    const item = comboEstados.options[comboEstados.selectedIndex].innerText
-    if(item == 'Por Cidades') {
-        obj.tipo = {Value: 'city'}
-        /**/
-    }else if (item == 'Por Estados') {
-        obj.tipo = {Value: 'state'}
-    }
-
-    const url = FLASK_API_BASE_URL+`temporalseries`
-    console.log(obj)
-    plotsAjax(url, obj, 'temporal')
     
 }
 
@@ -346,20 +350,48 @@ function deleteFromTable(id) {
 }
 
 async function plotsAjax(url,body, tipo) {
-    //console.log(JSON.stringify(body))
-    try {
-        const resposta = await axios.post(url, body, {headers: {'Content-Type': 'application/json'}})
-        console.log(resposta)
-        if(resposta.data.Erro)
-            alert('Cidades sem mortes')
-        else
-            addToTable([resposta.data], tipo)
-    }catch(e)
-    {
-        alert('Erro desconhecido!')
-        console.log(e)
+    let incompleto = false
+    let campo = ''
+    const chaves = Object.keys(body)
+    console.log(chaves)
+    const itensNulos = chaves.map(chave => {
+        console.log(body[chave])
+        return body[chave].Value == null || body[chave].Value == ''
+    })
+    console.log(itensNulos)
+    itemNulo = itensNulos.find(item => item == true)
+
+    if(itemNulo) {
+        campo = chaves[itensNulos.indexOf(itemNulo)]
+        incompleto = true
     }
-    
+    const combo = document.querySelector('select#csv')
+    const item = combo.options[combo.selectedIndex].value
+
+    if(item == '')
+    {
+        campo = 'parâmetro'
+        incompleto = true
+    }
+
+    if(incompleto) {
+        
+        alert('O campo '+campo+' está nulo. Preencha-o')
+    }else {
+    //console.log(JSON.stringify(body))
+        try {
+            const resposta = await axios.post(url, body, {headers: {'Content-Type': 'application/json'}})
+            console.log(resposta)
+            if(resposta.data.Erro)
+                alert('Cidades sem mortes')
+            else
+                addToTable([resposta.data], tipo)
+        }catch(e)
+        {
+            alert('Erro desconhecido!')
+            console.log(e)
+        }
+    }
 }
 
 function addToTable(files, type) {
@@ -565,9 +597,13 @@ function createDinamicPlots(type) {
         tipo = 'Mapa de Calor'
     }
 
-    console.log(FLASK_API_BASE_URL+complemento)
-    
-    plotsAjax(FLASK_API_BASE_URL+complemento,corpo, tipo)
+    if(filtro.length == 0)
+        alert('Selecione municípios ou estados para gerar o gráfico')
+    else {
+        console.log(FLASK_API_BASE_URL+complemento)
+        
+        plotsAjax(FLASK_API_BASE_URL+complemento,corpo, tipo)
+    }
 }
 
 
