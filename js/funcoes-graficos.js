@@ -87,14 +87,16 @@ function createOptions(type) {
     
     
     let estado = null
-    url = JS_API_BASE_URL
+    url = ''
     if(type == 'cidade') {
         label.innerText = 'Cidades'
         const combo = document.querySelector('select#dados')
         estado = combo.options[combo.selectedIndex].value
+        url += JS_API_BASE_URL
         url += `data/cidades/${estado}`
     }else {
         label.innerText = 'Estados'
+        url += FLASK_API_BASE_URL
         url += `data/estados`
     }
     formGroup.appendChild(label)
@@ -104,7 +106,7 @@ function createOptions(type) {
         resposta.data.sort()
         resposta.data.forEach(jsonItem => {
             const child = `<option value="${jsonItem.replace("-", "*")}"> 
-            ${jsonItem}
+            ${jsonItem.split('-')[0]}
             </option>`
             elemento.innerHTML += child
         })
@@ -188,7 +190,7 @@ function fillComboBox(input = 'checkbox') {
         label.innerText = 'Estados'
     formGroup.appendChild(label)
     if(item === 'estados') {
-        axios(JS_API_BASE_URL+`data/${item}`)
+        axios(FLASK_API_BASE_URL+`data/${item}`)
             .then(resposta => {
                 //console.log(resposta.data)
                 elemento.innerHTML = ''
@@ -235,7 +237,7 @@ function createCheckBoxes(type) {
     <div id="chkDados">
     </div>
     `
-    let url = JS_API_BASE_URL
+    let url = FLASK_API_BASE_URL
     if(type == 'cidade')
     {
         url += `data/estados`
@@ -244,25 +246,58 @@ function createCheckBoxes(type) {
     {
         const combo = document.querySelector('select#dados')
         const item = combo.options[combo.selectedIndex].value
-        url += `data/cidades/${item}`
+
+
+        const radios = Array.from(document.querySelectorAll('input[name=deaths]'))
+        let mortes = radios.filter(radio => radio.checked)[0].value
+
+        if(mortes == 'mortes') mortes = 'Deaths'
+        else mortes = 'Infected'
+
+        url += `dados/${mortes}/${item}`
         multiselect.innerHTML = createInnerHTML('cidade')
     }
     const elemento = document.querySelector('div#chkDados')
+    console.log(url)
     axios(url)
         .then(resposta => {
             elemento.innerHTML = ''
             resposta.data.sort()
             resposta.data.forEach(cidade => {
+                cidade = decodeURIComponent( escape(cidade) );
                 const findCity = obj => obj === cidade
                 const child = `<div class="form-check"> 
                 <label class="form-check-label" for="id${cidade}">
-                <input type="checkbox" onclick="updateList('${cidade}')" class="form-check-input" id="id${cidade}" value="${cidade.replace('-', '*')}" name="chk${type}" ${elementos.find(findCity)?'checked':''}/> 
-                ${cidade}</label>
+                <input type="checkbox" onclick="updateList('${cidade}')" class="form-check-input" id="id${cidade}" value="${cidade}" name="chk${type}" ${elementos.find(findCity)?'checked':''}/> 
+                ${cidade.split('*')[0]}</label>
                 </div>`
                 elemento.innerHTML += child
             })
         })
         .catch(err => console.log(err))
+}
+
+function changeCheckBoxes() {
+    const checkboxDiv = document.querySelector('div#chkDados')
+    if(checkboxDiv) {
+        const selectCSV = document.querySelector('select#csv')
+        if(selectCSV.options[selectCSV.selectedIndex].innerText == 'Por Cidades') {
+            createCheckBoxes('estado')
+            document.querySelector('ul#lista').innerHTML = ''
+            elementos = []
+            console.log('teoricamente esvaziei a lista')
+        }else
+            console.log('Nada')
+    }
+    else console.log('Não tem nada')
+}
+
+function encode_utf8(s) {
+    return unescape(encodeURIComponent(s));
+}
+  
+function decode_utf8(s) {
+    return decodeURIComponent(encodeURI(s));
 }
 
 function clearList() {
@@ -281,11 +316,11 @@ function clearList() {
 function updateList(cidade) {
     const findCity = obj => obj === cidade
     const lista = document.querySelector('ul#lista')
-    const id = `li${cidade.split(' ').join('')}`
+    const id = `li${cidade.split(' ').join('').replace('*', '')}`
     if(!elementos.find(findCity)) {
         const itemLista = document.createElement('li')
         itemLista.setAttribute('id', id)
-        itemLista.innerText = cidade
+        itemLista.innerText = cidade.replace('*', '-')
         lista.appendChild(itemLista)
         elementos.push(cidade)
     }else {
@@ -362,7 +397,7 @@ function addToTable(files, type) {
                 let cont = 0
                 itens.forEach(item => {
                     if(file.Alcance == 'cidade')
-                        item = item.split('-')[0]
+                        item = item.split('*')[0]
                     innerText += item
                     cont += 1
                     if(cont < itens.length)
@@ -529,6 +564,9 @@ function createDinamicPlots(type) {
     }else {
         tipo = 'Mapa de Calor'
     }
+
+    console.log(FLASK_API_BASE_URL+complemento)
+    
     plotsAjax(FLASK_API_BASE_URL+complemento,corpo, tipo)
 }
 

@@ -5,14 +5,14 @@
 <div class="form-check mb-3">
     <label class="form-check-label" for="radioMortes">
     
-    <input type="radio" value="mortes" class="form-check-input" name="deaths" id="radioMortes"> 
+    <input type="radio" onchange="changeCheckBoxes()" checked value="mortes" class="form-check-input" name="deaths" id="radioMortes"> 
     Mortes
     </label>
 </div>
 <div class="form-check mb-3">
     <label class="form-check-label" for="radioInfec">
     
-    <input type="radio" value="infectados" class="form-check-input" name="deaths" id="radioInfec"> 
+    <input type="radio" onchange="changeCheckBoxes()" value="infectados" class="form-check-input" name="deaths" id="radioInfec"> 
     Infectados
     </label>
 </div>
