@@ -356,7 +356,10 @@ async function plotsAjax(url,body, tipo) {
     console.log(chaves)
     const itensNulos = chaves.map(chave => {
         console.log(body[chave])
-        return body[chave].Value == null || body[chave].Value == ''
+        if(chave == 'mortes')
+            return false
+        else 
+            return body[chave].Value == null || body[chave].Value == ''
     })
     console.log(itensNulos)
     itemNulo = itensNulos.find(item => item == true)
@@ -412,6 +415,7 @@ function addToTable(files, type) {
 
             let itens = []
             let innerText = ''
+            console.log(file)
             if(file.Tipo == 'barra' || file.Tipo == 'pizza') {
                 if(file.Alcance == 'estado' ) {
                     innerText = file.Alcance+'s'
@@ -454,6 +458,8 @@ function addToTable(files, type) {
                 columnDemographic.innerText = file.Mortes
             }
 
+            if(file.Alcance == 'regiao')
+                file.Alcance = 'região'
             columnReach.innerText = file.Alcance
 
             
