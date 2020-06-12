@@ -6,6 +6,112 @@ let elementos = []
 let selecionado = null
 let tabela = []
 
+
+async function getGeneralData(type) {
+    const select = document.querySelector('select#sltData')
+    const selecionado = select.options[select.selectedIndex]
+    const valor = selecionado.value
+    const text = selecionado.text
+
+    const selectCsv = document.querySelector('select#csv')
+    const csv = selectCsv.options[selectCsv.selectedIndex].text
+
+    //console.log(valor)
+    let url = FLASK_API_BASE_URL
+    const paragrafo = document.querySelector('div#'+type+' p')
+    if(type == 'absolute'){
+        url += 'absolutos/'+valor+'/'
+        paragrafo.innerText = 'Dados Acumulados até '+text
+    }else{
+        url += 'historico/'+valor+'/'
+        paragrafo.innerText = `Dados do dia ${text}`
+    }
+
+    let estado = ''
+    if(csv == 'Por Cidades') {
+        const sltDados = document.querySelector('select#dados')
+        estado = sltDados.options[sltDados.selectedIndex].value
+        url += estado
+    }else {
+        url += 'None'
+    }
+
+    const buttons = Array.from(document.querySelectorAll('button'))
+
+    if(estado !== '' || csv == 'Por Estados') {
+        if(csv == 'Por Cidades')
+            paragrafo.innerText += ' - '+estado
+        
+        buttons.forEach(button => button.setAttribute('disabled', 'true'))
+        const resposta = await axios(url)
+        if(!resposta.data)
+            alert('Sem ocorrências!')
+        else {
+            const absolutos = resposta.data
+            //console.log(absolutos)
+            const objetosTratados = []
+            for(let i = 0; i < Object.keys(absolutos.novasMortes).length; i++) {
+                let obj = {}
+                if(absolutos.Estados) {
+                    obj = {
+                        dados: absolutos.Estados[`${i}`],
+                        mortes: absolutos.novasMortes[`${i}`],
+                        infectados: absolutos.novosInfectados[`${i}`]
+                    }
+                }else {
+                    obj = {
+                        dados: absolutos.Cidades[`${i}`],
+                        mortes: absolutos.novasMortes[`${i}`],
+                        infectados: absolutos.novosInfectados[`${i}`]
+                    }
+                }   
+                //console.log(obj)
+                objetosTratados.push(obj)
+            }
+            const tabelaGeral = document.querySelector('table#tbl'+type+' tbody')
+        
+            tabelaGeral.innerHTML = ''
+            const linhas = objetosTratados.map(obj => {
+                return `<tr>
+                <td>
+                    ${obj.dados.split('*')[0]}
+                </td>
+                <td>
+                    ${obj.mortes}
+                </td>
+                <td>
+                    ${obj.infectados}
+                </td>
+                </tr>`
+            })
+            linhas.forEach(linha => tabelaGeral.innerHTML += linha)
+        }
+        buttons.forEach(button => button.removeAttribute('disabled'))
+    }else{
+        alert('Escolha um Estado')
+    }
+}
+
+async function getDates() {
+    const select = document.querySelector('select#sltData')
+    const resposta = await axios(FLASK_API_BASE_URL+'datas')
+    const datas = resposta.data
+    const datasFormatadas = datas.map(data => {
+        //const components = data.split('-')
+        const [ano, mes, dia] = data.split('-')
+        return `
+        <option value="${data}">
+        ${dia}/${mes}/${ano}
+        </option>`
+        //return `${components[2]}/${components[1]}/${components[0]}`
+    })
+    
+    datasFormatadas.forEach(dataFormatada => {
+        select.innerHTML += dataFormatada
+    })
+
+}
+
 function choosePath(temporal = false)
 {
     if(temporal) {
@@ -617,7 +723,10 @@ async function ajaxNavigation(link, destino, push = true) {
         div.innerHTML = html
         if(link == 'sobre.html')
             document.querySelector('div#tabela').style.visibility = 'hidden'
-        else
+        else if(link == 'home.html'){
+            document.querySelector('div#tabela').style.visibility = 'hidden'
+            getDates()
+        }else
             document.querySelector('div#tabela').style.visibility = 'visible'
         /*let url = FLASK_API_BASE_URL+'teste/'
         let tipo = ''

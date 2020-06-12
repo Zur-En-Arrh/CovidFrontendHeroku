@@ -1,0 +1,50 @@
+<h1 class="mb-3 mt-3">Página Inicial</h1>
+
+<div id="datas"></div>
+
+<div id="select-group"  class="form-group mb-3">
+    <div class="form-group">
+        <label for="sltData">Data:</label>
+        <select id="sltData" class="form-control"></select>
+    </div>
+    <div class="form-group">
+        <label for="csv">Parâmetro</label>
+        <select class="form-control" onchange="fillComboBox()" name="param" id="csv">
+        <option value="">Escolha um Parâmetro</option>
+        <option value="estados">Por Cidades</option>
+        <option value="region">Por Estados</option>
+        </select>
+    </div>
+</div>
+    <!-- <select id="dados"></select> -->
+<button type="button" id="btnGrafico" class="btn btn-primary mb-3" onclick="getGeneralData('history')">Dados do dia</button>
+<button type="button" id="btnGrafico" class="btn btn-primary mb-3" onclick="getGeneralData('absolute')">Dados Acumulados</button>
+<br/><br/><br/>
+<div style="height: 340px;" class="row mt-5">
+    <div class="col-6" id="absolute">
+        <p>Dados Acumulados</p>
+        <div style="height: 340px;" class="overflow-auto">
+            <table class="table" id="tblabsolute">
+                <thead>
+                    <td>Lugar</td>
+                    <td>Mortes</td>
+                    <td>Infectados</td>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-6" id="history">
+        <p>Dados do dia</p>
+        <div style="height: 340px;" class="overflow-auto">
+            <table class="table" id="tblhistory">
+                <thead>
+                    <td>Lugar</td>
+                    <td>Mortes</td>
+                    <td>Infectados</td>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
