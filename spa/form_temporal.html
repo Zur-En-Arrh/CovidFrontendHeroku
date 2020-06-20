@@ -1,5 +1,49 @@
 <h1 class="mb-3 mt-3">Séries Temporais (em linha)</h1>
 
+<fieldset>
+<p>Comparação Temporal</p>
+<div class="form-check mb-3">
+    <label class="form-check-label" for="radioDia">
+    <input type="radio" value="dia" checked class="form-check-input" name="time" id="radioDia"> 
+    Por Dia
+    </label>
+</div>
+<div class="form-check mb-3">
+    <label class="form-check-label" for="radioAcc">
+    
+    <input type="radio" value="acc" class="form-check-input" name="time" id="radioAcc"> 
+    Acumulados
+    </label>
+</div>
+</fieldset>
+
+<fieldset>
+<p>Demografia</p>
+<div class="form-check mb-3">
+    <label class="form-check-label" for="radioMortes">
+    
+    <input type="radio" value="deaths" onchange="changeCheckBoxes()" checked class="form-check-input" name="deaths" id="radioMortes"> 
+    Mortes
+    </label>
+</div>
+<div class="form-check mb-3">
+    <label class="form-check-label" for="radioInfec">
+    
+    <input type="radio" value="infected" onchange="changeCheckBoxes()" class="form-check-input" name="deaths" id="radioInfec"> 
+    Infectados
+    </label>
+</div>
+
+<div class="form-check mb-3">
+    <label class="form-check-label" for="radioDois">
+    
+    <input type="radio" value="both" onchange="changeCheckBoxes()" class="form-check-input" name="deaths" id="radioDois"> 
+    Ambos
+    </label>
+</div>
+</fieldset>
+
+
 <div id="select-group" class="form-group mb-3">
     <div class="form-group">
         <label for="csv">Parâmetro</label>

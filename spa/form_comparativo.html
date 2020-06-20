@@ -1,6 +1,27 @@
 <h1 class="mb-3 mt-3">Gráficos Comparativos (em linha)</h1>
 
+<fieldset>
+<p>Comparação Temporal</p>
+    <div class="form-check mb-3">
+        <label class="form-check-label" for="radioDia">
+        <input type="radio" value="dia" checked class="form-check-input" name="time" id="radioDia"> 
+        Por Dia
+        </label>
+    </div>
+    <div class="form-check mb-3">
+        <label class="form-check-label" for="radioAcc">
+        
+        <input type="radio" value="acc" class="form-check-input" name="time" id="radioAcc"> 
+        Acumulados
+        </label>
+    </div>
+</fieldset>
+
+
 <input type="hidden" name="tokenDinamico" value="comparativo">
+
+<fieldset>
+<p>Demografia</p>
 <div class="form-check mb-3">
     <label class="form-check-label" for="radioMortes">
     
@@ -15,6 +36,7 @@
     Infectados
     </label>
 </div>
+</fieldset>
 
 <div id="select-group">
     <div class="form-group">

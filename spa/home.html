@@ -1,5 +1,61 @@
 <h1 class="mb-3 mt-3">Página Inicial</h1>
 
+<h1 class="mt-3 mb-3">Fontes de Dados</h1>
+<p>
+    <a target="_blank" href="https://raw.githubusercontent.com/wcota/covid19br/master/cases-brazil-states.csv">https://raw.githubusercontent.com/wcota/covid19br/master/cases-brazil-states.csv</a>
+</p>
+
+<p>
+    <a target="_blank" href="https://raw.githubusercontent.com/wcota/covid19br/master/cases-brazil-cities-time.csv">https://raw.githubusercontent.com/wcota/covid19br/master/cases-brazil-cities-time.csv</a>
+</p>
+<p>
+    <a target="_blank" href="https://censo2010.ibge.gov.br/">https://censo2010.ibge.gov.br/</a>
+</p>
+<p>
+    <a target="_blank" href="https://www.ibge.gov.br/cidades-e-estados/">https://www.ibge.gov.br/cidades-e-estados/</a>
+</p>
+<h1 class="mt-3 mb-3">Metodologia</h2>
+<p>Os óbitos contabilizados, pelos gráficos e tabelas desta plataforma, levam em consideração a data de registro da
+    causa dos falecimentos. Atualmente, esses números dizem respeito às mortes pelo vírus registradas no dia, invés da data da ocorrência propriamente dita.
+    Isto se deve pelo fato de que os testes para o diagnóstico da COVID-19 nesses casos nem sempre são apurados no mesmo dia
+    da morte.
+</p>
+
+<p>No que diz respeito aos lugares onde esses números são atribuídos, uma porção das contaminações não possuem origem definida,
+    isto é, não se sabe exatamente onde a vítima contraiu o vírus da doença, possiblitando a ocorrência durante uma viagem entre munípios.
+    Por haver dúvidas sobre o local de contágio, além da classificação entre estados e municípios, existem números atribuídos a uma categoria <b>CASO SEM LOCALIZAÇÃO DEFINIDA</b>.  </p>
+
+
+<h1>Sobre número de casos negativos</h1>
+<p>
+Os casos negativos aparecem devido à correção nos boletins das secretarias de saúde, quando corrigem a localização de cada caso, ou um caso é, digamos, "desconfirmado" (testes refeitos, erro de informação, etc). Isso acontece com certa frequência. Os casos aqui descritos são tais como reportados pelos boletins das secretarias. Já em "CASO SEM LOCALIZAÇÃO DEFINIDA/UF", praticamente sempre aparecem casos menores que 0 pois no boletim seguinte identificaram a localização desses casos.
+A explicação para os números de Santa Catarina (SC): #31 e documentado  <a target="_blank" href="https://github.com/wcota/covid19br/blob/master/_fixes_meta.csv">nesse arquivo </a> (<i>Adaptado de <a href="https://github.com/wcota/covid19br/issues/43">https://github.com/wcota/covid19br/issues/43</a></i>).
+</p>
+
+<p><a target="_blank" href="https://preprints.scielo.org/index.php/scielo/preprint/view/362/version/371">Outras informações </a>
+</p>
+
+<h1>Sobre o estado de Alagoas não ter novos casos dia 08 (oito) de Junho</h1>
+<p>O Brasil.IO está utilizando os dados dos boletins lançados por Alagoas. 
+    No boletim do dia 7, disseram que os números eram do dia 6: <a target="_blank" href="http://www.saude.al.gov.br/wp-content/uploads/2020/06/Informe-Epidemiol%C3%B3gico-COVID-19-n%C2%BA-93-7-6-2020.pdf">fonte</a>
+    
+    </p>
+
+<p>
+    Aparece nos rodapés em: CIEVS/AL dados em 6/06/2020
+    
+    Já no do dia 8, aparece referente ao dia 7: <a target="_blank" href="http://www.saude.al.gov.br/wp-content/uploads/2020/06/Informe-Epidemiol%C3%B3gico-COVID-19-n%C2%BA-94-8-6-2020.pdf">fonte</a>, rodapé em: CIEVS/AL dados em 7/06/2020.
+</p>
+
+<p>
+    No dia 9 (<a target="_blank" href="http://www.saude.al.gov.br/wp-content/uploads/2020/06/Informe-Epidemiol%C3%B3gico-COVID-19-n%C2%BA-95-9-6-2020.pdf">fonte</a>) passaram a colocar os dados do próprio dia, rodapé em: CIEVS/AL dados em 9/06/2020.
+    
+    Para os dados serem fieis aos relatados pela secretaria, o dia 8 ficou sem novos casos.
+    (<i>Adaptado de <a target="_blank" href="https://github.com/wcota/covid19br/issues/47">https://github.com/wcota/covid19br/issues/47</a></i>)
+</p>
+
+<p> É possível verificar esses detalhes, tal como dados gerais de estados e municípios abaixo.</p>
+
 <div id="datas"></div>
 
 <div id="select-group"  class="form-group mb-3">
@@ -12,7 +68,7 @@
         <select class="form-control" onchange="fillComboBox()" name="param" id="csv">
         <option value="">Escolha um Parâmetro</option>
         <option value="estados">Por Cidades</option>
-        <option value="region">Por Estados</option>
+        <option value="region" selected>Por Estados</option>
         </select>
     </div>
 </div>

@@ -99,10 +99,16 @@ async function getDates() {
     const datasFormatadas = datas.map(data => {
         //const components = data.split('-')
         const [ano, mes, dia] = data.split('-')
-        return `
-        <option value="${data}">
-        ${dia}/${mes}/${ano}
-        </option>`
+        if(data == '2020-06-08')
+            return `
+            <option selected value="${data}">
+            ${dia}/${mes}/${ano}
+            </option>`
+        else 
+            return `
+            <option value="${data}">
+            ${dia}/${mes}/${ano}
+            </option>`
         //return `${components[2]}/${components[1]}/${components[0]}`
     })
     
@@ -275,6 +281,17 @@ function createTemporalSeries() {
         }else if (item == 'Por Estados') {
             obj.tipo = {Value: 'state'}
         }
+
+        const timeInput = Array.from(document.querySelectorAll('input[name=time]')).find(input => input.checked == true)
+        let tempo = false
+        if(timeInput.value == 'dia')
+            tempo = true
+        obj.time = {Value: tempo}
+
+
+        const demografiaInput = Array.from(document.querySelectorAll('input[name=deaths]')).find(input => input.checked == true)
+        
+        obj.kind = {Value: demografiaInput.value}
 
         const url = FLASK_API_BASE_URL+`temporalseries`
         console.log(obj)
@@ -468,6 +485,7 @@ function deleteFromTable(id) {
 }
 
 async function plotsAjax(url,body, tipo) {
+    console.log(body)
     const button = document.querySelector('button#btnGrafico')
     button.setAttribute('disabled', 'true')
     let incompleto = false
@@ -476,7 +494,7 @@ async function plotsAjax(url,body, tipo) {
     console.log(chaves)
     const itensNulos = chaves.map(chave => {
         console.log(body[chave])
-        if(chave == 'mortes' || chave == 'taxa')
+        if(chave == 'mortes' || chave == 'taxa' || chave == 'time')
             return false
         else 
             return body[chave].Value == null || body[chave].Value == ''
@@ -556,8 +574,11 @@ function addToTable(files, type) {
                 })
             }
 
+            if(file.Tempo)
+                innerText += `(${file.Tempo})`
+
             let demographic = ''
-            if(file.Tipo == 'temporal') {
+            if(file.Mortes == '') {
                 demographic = 'infectados e mortos'
             }else {
                 demographic = file.Mortes
@@ -679,12 +700,12 @@ function createDinamicPlots(type) {
 
     const filtro = elementos.filter(obj => obj !== undefined)
 
-    const corpo = {
+    let corpo = {
         selecionado: {Value: filtro},
         mortes: {Value: mortes}
     }
 
-    console.log(JSON.stringify(corpo))
+    
 
     let complemento = `${type}/`
 
@@ -700,6 +721,11 @@ function createDinamicPlots(type) {
             complemento += `/Two`
         else
             complemento += `/Multiple`
+        const timeInput = Array.from(document.querySelectorAll('input[name=time]')).find(input => input.checked == true)
+        let tempo = false
+        if(timeInput.value == 'dia')
+            tempo = true
+        corpo.time = tempo
     }else {
         tipo = 'Mapa de Calor'
     }
@@ -708,7 +734,7 @@ function createDinamicPlots(type) {
         alert('Selecione municípios ou estados para gerar o gráfico')
     else {
         console.log(FLASK_API_BASE_URL+complemento)
-        
+        console.log(JSON.stringify(corpo))
         plotsAjax(FLASK_API_BASE_URL+complemento,corpo, tipo)
     }
 }
@@ -725,7 +751,12 @@ async function ajaxNavigation(link, destino, push = true) {
             document.querySelector('div#tabela').style.visibility = 'hidden'
         else if(link == 'home.html'){
             document.querySelector('div#tabela').style.visibility = 'hidden'
-            getDates()
+            const buttons = Array.from(document.querySelectorAll('button'))
+            buttons.forEach(button => button.setAttribute('disabled', 'true'))
+            await getDates()
+            await getGeneralData('history')
+            await getGeneralData('absolute')
+            buttons.forEach(button => button.removeAttribute('disabled'))
         }else
             document.querySelector('div#tabela').style.visibility = 'visible'
         /*let url = FLASK_API_BASE_URL+'teste/'
