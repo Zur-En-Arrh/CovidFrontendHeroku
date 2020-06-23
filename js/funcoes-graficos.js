@@ -142,7 +142,7 @@ function choosePath(temporal = false)
         }else {
             const estadoComboBox = document.querySelector('select#dados')
             if(estadoComboBox){
-                console.log('entrei aqui')
+                //console.log('entrei aqui')
                 //document.querySelector('div#radioDados').innerHTML = ''*/
                 let label = document.querySelector('label[for=gvalue]')
                 if(label)
@@ -294,7 +294,7 @@ function createTemporalSeries() {
         obj.kind = {Value: demografiaInput.value}
 
         const url = FLASK_API_BASE_URL+`temporalseries`
-        console.log(obj)
+        console.log('Corpo', obj)
         plotsAjax(url, obj, 'temporal')
     }else {
         alert('Selecione um município ou estado para gerar o gráfico')
@@ -397,7 +397,7 @@ function createCheckBoxes(type) {
         multiselect.innerHTML = createInnerHTML('cidade')
     }
     const elemento = document.querySelector('div#chkDados')
-    console.log(url)
+    //console.log(url)
     axios(url)
         .then(resposta => {
             elemento.innerHTML = ''
@@ -424,11 +424,10 @@ function changeCheckBoxes() {
             createCheckBoxes('estado')
             document.querySelector('ul#lista').innerHTML = ''
             elementos = []
-            console.log('teoricamente esvaziei a lista')
-        }else
-            console.log('Nada')
+            //console.log('teoricamente esvaziei a lista')
+        }
     }
-    else console.log('Não tem nada')
+    //elseconsole.log('Não tem nada')
 }
 
 function encode_utf8(s) {
@@ -467,7 +466,7 @@ function updateList(cidade) {
         deletedItem.parentNode.removeChild(deletedItem)
         delete elementos[elementos.indexOf(cidade)]
     }
-    console.log(elementos)
+    //console.log(elementos)
 }
 
 function deleteFromTable(id) {
@@ -485,21 +484,21 @@ function deleteFromTable(id) {
 }
 
 async function plotsAjax(url,body, tipo) {
-    console.log(body)
+    console.log('BODY', body)
     const button = document.querySelector('button#btnGrafico')
     button.setAttribute('disabled', 'true')
     let incompleto = false
     let campo = ''
     const chaves = Object.keys(body)
-    console.log(chaves)
+    //console.log(chaves)
     const itensNulos = chaves.map(chave => {
-        console.log(body[chave])
+        //console.log(body[chave])
         if(chave == 'mortes' || chave == 'taxa' || chave == 'time')
             return false
         else 
             return body[chave].Value == null || body[chave].Value == ''
     })
-    console.log(itensNulos)
+    //console.log(itensNulos)
     itemNulo = itensNulos.find(item => item == true)
 
     if(itemNulo) {
@@ -532,23 +531,23 @@ async function plotsAjax(url,body, tipo) {
         }catch(e)
         {
             alert('Erro desconhecido!')
-            console.log(e)
+            //console.log(e)
         }
     }
 }
 
 function addToTable(files, type) {
-    console.log(files)
+    //console.log(files)
     const lines = files.map(file => {
         if(tabela.find(obj => obj.caminho == file.caminho)) {
             return null
         }else {
             tabela.push(file)
-            console.log(tabela)
+            //console.log(tabela)
 
             let itens = []
             let innerText = ''
-            console.log(file)
+            //console.log(file)
             if(file.Tipo == 'barra' || file.Tipo == 'pizza') {
                 if(file.Alcance == 'estado' ) {
                     innerText = file.Alcance+'s'
@@ -725,7 +724,7 @@ function createDinamicPlots(type) {
         let tempo = false
         if(timeInput.value == 'dia')
             tempo = true
-        corpo.time = tempo
+        corpo.time = {Value: tempo}
     }else {
         tipo = 'Mapa de Calor'
     }
@@ -733,8 +732,8 @@ function createDinamicPlots(type) {
     if(filtro.length == 0)
         alert('Selecione municípios ou estados para gerar o gráfico')
     else {
-        console.log(FLASK_API_BASE_URL+complemento)
-        console.log(JSON.stringify(corpo))
+        //console.log(FLASK_API_BASE_URL+complemento)
+        //console.log(JSON.stringify(corpo))
         plotsAjax(FLASK_API_BASE_URL+complemento,corpo, tipo)
     }
 }
