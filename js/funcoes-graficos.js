@@ -727,6 +727,7 @@ function createDinamicPlots(type) {
         corpo.time = {Value: tempo}
     }else {
         tipo = 'Mapa de Calor'
+        
     }
 
     if(filtro.length == 0)
