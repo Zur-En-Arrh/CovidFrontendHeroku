@@ -747,7 +747,7 @@ async function ajaxNavigation(link, destino, push = true) {
         const resposta = await axios(link)
         const html = await resposta.data
         div.innerHTML = html
-        if(link == 'sobre.html')
+        if(link == 'sobre.html' || link == 'feedback.html')
             document.querySelector('div#tabela').style.visibility = 'hidden'
         else if(link == 'home.html'){
             document.querySelector('div#tabela').style.visibility = 'hidden'
